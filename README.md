@@ -8,13 +8,19 @@ The easiest way to use image circulate
 ______
 
 #如何集成XRCarouselView
-1.将XRCarouselView文件夹中的所有文件拖入项目中
 
-2.导入主头文件 #import "XRCarouselView.h"
+####手动导入
+将XRCarouselView文件夹中的所有文件添加到项目中
+####cocoapods导入
+pod 'XRCarouselView'
 
-3.创建XRCarouselView，设置图片(路径)数组
+####使用
+1.导入主头文件 XRCarouselView.h
 
-4.将XRCarouselView添加到要展示到view上面
+2.创建XRCarouselView，设置图片(路径)数组
+
+3.将XRCarouselView添加到要展示到view上面
+
 
 #XRCarouselView的优点
 
@@ -39,6 +45,9 @@ ______
 5.setPageImageView:andCurrentImage:：设置分页控件的图片
 
 6.void(^imageClickBlock)(NSInteger index)：图片被点击后要执行的代码
+
+#效果演示
+![](http://ww2.sinaimg.cn/large/b68232a1gw1f208x08t45g20a80hz4kl.gif)
 
 
 
