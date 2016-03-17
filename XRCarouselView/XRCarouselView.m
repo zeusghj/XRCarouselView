@@ -174,8 +174,10 @@ typedef enum{
 
 - (void)setTime:(NSTimeInterval)time {
     _time = time;
-    [self.timer invalidate];
-    [self startTimer];
+    if (_images.count > 1) {
+        [self.timer invalidate];
+        [self startTimer];
+    }
 }
 
 - (void)setPageControlHidden:(BOOL)pageControlHidden {
