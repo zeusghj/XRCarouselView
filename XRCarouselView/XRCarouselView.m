@@ -158,9 +158,9 @@ typedef enum{
     }
 }
 
-- (void)setPageControlPosition:(CGPoint)position {
+- (void)setPageControlPosition:(CGPoint)pageControlPosition {
     CGRect frame = self.pageControl.frame;
-    frame.origin = position;
+    frame.origin = pageControlPosition;
     self.pageControl.frame = frame;
 }
 
