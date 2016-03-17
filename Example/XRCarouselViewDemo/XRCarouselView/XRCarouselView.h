@@ -16,8 +16,8 @@
 @property (nonatomic, assign) BOOL pageControlHidden;
 //点击图片后要执行的操作，会返回图片在数组中的索引
 @property (nonatomic, copy) void(^imageClickBlock)(NSInteger);
-//分页控件的位置，默认在底部中间
-@property (nonatomic, assign) CGPoint pageControlPosition;
+//设置分页控件的位置，默认在底部中间
+- (void)setPageControlPosition:(CGPoint)position;
 //设置分页控件的图片,两个图片都不能为空，否则设置无效，不设置则为系统默认
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage;
 @end
