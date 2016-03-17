@@ -101,16 +101,14 @@ typedef enum{
 #pragma mark- 设置相关方法
 - (void)setImageArray:(NSArray *)imageArray{
     _imageArray = imageArray;
-    if ([imageArray.firstObject isKindOfClass:[UIImage class]]) {
-        _images = [imageArray mutableCopy];
-    } else if ([imageArray.firstObject isKindOfClass:[NSString class]]){
-        _images = [NSMutableArray array];
-        for (int i = 0; i < imageArray.count; i++) {
+    _images = [NSMutableArray array];
+    for (int i = 0; i < imageArray.count; i++) {
+        if ([imageArray[i] isKindOfClass:[UIImage class]]) {
+            [_images addObject:imageArray[i]];
+        } else if ([imageArray[i] isKindOfClass:[NSString class]]){
             [_images addObject:[UIImage imageNamed:@"placeholder"]];
             [self downloadImages:i];
         }
-    } else {
-        return;
     }
     self.currImageView.image = _images.firstObject;
     self.pageControl.numberOfPages = _images.count;
@@ -141,7 +139,10 @@ typedef enum{
             //下载图片
             NSBlockOperation *download = [self.operations objectForKey:key];
             if (!download) {
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                //创建一个队列，默认为并发队列
+                NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+                //创建一个操作
+                download = [NSBlockOperation blockOperationWithBlock:^{
                     NSURL *url = [NSURL URLWithString:key];
                     NSData *data = [NSData dataWithContentsOfURL:url];
                     if (data) {
@@ -149,9 +150,9 @@ typedef enum{
                         [self.imageDic setObject:image forKey:key];
                         self.images[index] = image;
                         [data writeToFile:path atomically:YES];
-                        [self.operations removeObjectForKey:key];
-                    }
-                });
+                        [self.operations removeObjectForKey:key];                    }
+                }];
+                [queue addOperation:download];
                 [self.operations setObject:download forKey:key];
             }
         }

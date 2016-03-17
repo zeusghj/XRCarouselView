@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 @interface XRCarouselView : UIView
-//轮播的图片数组，可以全是图片，也可以全是网络路径，不能既有图片又有路径
+//轮播的图片数组，可以是图片，也可以是网络路径
 @property (nonatomic, strong) NSArray *imageArray;
 //每一页停留时间，默认为1s
 @property (nonatomic, assign) NSTimeInterval time;

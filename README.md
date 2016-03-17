@@ -34,7 +34,7 @@ pod 'XRCarouselView'
 
 #XRCarouselView的常用属性方法
 
-1.imageArray：要轮播的图片数组，也可传递路径
+1.imageArray：要轮播的图片数组，可传本地图片或网络图片路径
 
 2.time：设置每页的停留时间
 
