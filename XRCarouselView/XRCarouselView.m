@@ -19,7 +19,7 @@ typedef enum{
 //下载的图片字典
 @property (nonatomic, strong) NSMutableDictionary *imageDic;
 //下载图片的操作
-@property (nonatomic, strong) NSMutableDictionary *operations;
+@property (nonatomic, strong) NSMutableDictionary *operationDic;
 //滚动方向
 @property (nonatomic, assign) Direction direction;
 //显示的imageView
@@ -137,7 +137,7 @@ typedef enum{
             [self.imageDic setObject:image forKey:key];
         }else{
             //下载图片
-            NSBlockOperation *download = [self.operations objectForKey:key];
+            NSBlockOperation *download = [self.operationDic objectForKey:key];
             if (!download) {
                 //创建一个队列，默认为并发队列
                 NSOperationQueue *queue = [[NSOperationQueue alloc] init];
@@ -150,10 +150,10 @@ typedef enum{
                         [self.imageDic setObject:image forKey:key];
                         self.images[index] = image;
                         [data writeToFile:path atomically:YES];
-                        [self.operations removeObjectForKey:key];                    }
+                        [self.operationDic removeObjectForKey:key];                    }
                 }];
                 [queue addOperation:download];
-                [self.operations setObject:download forKey:key];
+                [self.operationDic setObject:download forKey:key];
             }
         }
     }
