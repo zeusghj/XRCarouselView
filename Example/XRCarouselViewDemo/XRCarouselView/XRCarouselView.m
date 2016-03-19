@@ -36,11 +36,22 @@ typedef enum{
 @property (nonatomic, strong) UIPageControl *pageControl;
 //定时器
 @property (nonatomic, strong) NSTimer *timer;
+//任务队列
+@property (nonatomic, strong) NSOperationQueue *queue;
 @property (nonatomic, assign) CGFloat width;
 @property (nonatomic, assign) CGFloat height;
 @end
 
 @implementation XRCarouselView
+
++ (void)initialize {
+    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
+    BOOL isDir = NO;
+    BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:cache isDirectory:&isDir];
+    if (!isExists || !isDir) {
+        [[NSFileManager defaultManager] createDirectoryAtPath:cache withIntermediateDirectories:YES attributes:nil error:nil];
+    }
+}
 
 #pragma mark- scrollView尺寸
 - (CGFloat)height {
@@ -52,6 +63,14 @@ typedef enum{
 }
 
 #pragma mark- 懒加载
+- (NSOperationQueue *)queue {
+    if (!_queue) {
+        _queue = [[NSOperationQueue alloc] init];
+    }
+    return _queue;
+}
+
+
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
@@ -128,7 +147,7 @@ typedef enum{
         _images[index] = image;
     }else{
         //从沙盒缓存中取图片
-        NSString *cache = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+        NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
         NSString *path = [cache stringByAppendingPathComponent:[key lastPathComponent]];
         NSData *data = [NSData dataWithContentsOfFile:path];
         if (data) {
@@ -139,8 +158,6 @@ typedef enum{
             //下载图片
             NSBlockOperation *download = [self.operations objectForKey:key];
             if (!download) {
-                //创建一个队列，默认为并发队列
-                NSOperationQueue *queue = [[NSOperationQueue alloc] init];
                 //创建一个操作
                 download = [NSBlockOperation blockOperationWithBlock:^{
                     NSURL *url = [NSURL URLWithString:key];
@@ -152,7 +169,7 @@ typedef enum{
                         [data writeToFile:path atomically:YES];
                         [self.operations removeObjectForKey:key];                    }
                 }];
-                [queue addOperation:download];
+                [self.queue addOperation:download];
                 [self.operations setObject:download forKey:key];
             }
         }
@@ -211,6 +228,16 @@ typedef enum{
 
 - (void)imageClick {
     !self.imageClickBlock?:self.imageClickBlock(self.currIndex);
+}
+
+//清除沙盒中的图片缓存
+- (void)clearDiskCache {
+    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
+
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cache error:NULL];
+    for (NSString *fileName in contents) {
+        [[NSFileManager defaultManager] removeItemAtPath:[cache stringByAppendingPathComponent:fileName] error:nil];
+    }
 }
 
 #pragma mark- UIScrollViewDelegate

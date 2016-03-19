@@ -32,6 +32,7 @@
     carouselView.pageControlPosition = CGPointMake(300, 160);
     //隐藏分页控件
 //    carouselView.pageControlHidden = YES;
+    [carouselView clearDiskCache];
     
 }
 

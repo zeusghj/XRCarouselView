@@ -18,6 +18,8 @@
 @property (nonatomic, copy) void(^imageClickBlock)(NSInteger);
 //分页控件的位置，默认在底部中间
 @property (nonatomic, assign) CGPoint pageControlPosition;
+//清除沙盒中的图片缓存
+- (void)clearDiskCache;
 //设置分页控件的图片,两个图片都不能为空，否则设置无效，不设置则为系统默认
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage;
 @end
