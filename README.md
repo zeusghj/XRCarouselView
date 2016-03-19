@@ -7,6 +7,21 @@ The easiest way to use image circulate
 
 ______
 
+#XRCarouselView的优点
+1.文件少，代码简洁
+
+2.不依赖任何其他第三方库，耦合度低
+
+3.同时支持本地图片及网络图片
+
+4.可修改分页控件位置，显示或隐藏
+
+5.自定义分页控件的图片，就是这么个性
+
+6.自带图片缓存，一次加载，永久使用
+
+7.性能好，占用内存少，轮播流畅
+
 #如何集成XRCarouselView
 
 ####手动导入
@@ -21,16 +36,6 @@ pod 'XRCarouselView'
 
 3.将XRCarouselView添加到要展示到view上面
 
-
-#XRCarouselView的优点
-
-1.一个文件就搞定，代码简洁
-
-2.两个imageView实现轮播，占用内存小
-
-3.同时支持本地图片与网络图片
-
-4.自带网络图片缓存功能
 
 #XRCarouselView的常用属性方法
 
