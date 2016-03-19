@@ -63,6 +63,20 @@ typedef enum{
 }
 
 #pragma mark- 懒加载
+- (NSMutableDictionary *)imageDic{
+    if (!_imageDic) {
+        _imageDic = [NSMutableDictionary dictionary];
+    }
+    return _imageDic;
+}
+
+- (NSMutableDictionary *)operationDic{
+    if (!_operationDic) {
+        _operationDic = [NSMutableDictionary dictionary];
+    }
+    return  _operationDic;
+}
+
 - (NSOperationQueue *)queue {
     if (!_queue) {
         _queue = [[NSOperationQueue alloc] init];
