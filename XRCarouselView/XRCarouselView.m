@@ -170,7 +170,7 @@ typedef enum{
                         [self.operationDic removeObjectForKey:key];                    }
                 }];
                 [self.queue addOperation:download];
-                [self.operations setObject:download forKey:key];
+                [self.operationDic setObject:download forKey:key];
 
             }
         }
