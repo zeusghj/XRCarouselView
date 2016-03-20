@@ -43,13 +43,15 @@ pod 'XRCarouselView'
 
 2.time：设置每页的停留时间
 
-3.pageContolPosition：设置分页控件的位置
+3.setPageControlPosition:anchorPoint:：设置分页控件的位置，第二个参数表示是设置中点还是原点
 
 4.pageControlHidden：隐藏分页控件
 
 5.setPageImageView:andCurrentImage:：设置分页控件的图片
 
 6.void(^imageClickBlock)(NSInteger index)：图片被点击后要执行的代码
+
+7.clearDiskCache：清除沙盒中的图片缓存
 
 #效果演示
 ![](http://ww2.sinaimg.cn/large/b68232a1gw1f208x08t45g20a80hz4kl.gif)

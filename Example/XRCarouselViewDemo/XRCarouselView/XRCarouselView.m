@@ -38,8 +38,10 @@ typedef enum{
 @property (nonatomic, strong) NSTimer *timer;
 //任务队列
 @property (nonatomic, strong) NSOperationQueue *queue;
-@property (nonatomic, assign) CGFloat width;
-@property (nonatomic, assign) CGFloat height;
+//记录pageControl的坐标
+@property (nonatomic, assign) CGPoint position;
+//记录pageControl的锚点
+@property (nonatomic, assign) AnchorPoint anchorPoint;
 @end
 
 @implementation XRCarouselView
@@ -53,7 +55,7 @@ typedef enum{
     }
 }
 
-#pragma mark- scrollView尺寸
+#pragma mark- frame相关
 - (CGFloat)height {
     return self.scrollView.frame.size.height;
 }
@@ -149,7 +151,6 @@ typedef enum{
         _scrollView.contentSize = CGSizeMake(self.width * 3, 0);
     } else {
         _scrollView.contentSize = CGSizeZero;
-        _scrollView.scrollEnabled = NO;
     }
 }
 
@@ -180,27 +181,32 @@ typedef enum{
                         UIImage *image = [UIImage imageWithData:data];
                         [self.imageDic setObject:image forKey:key];
                         self.images[index] = image;
+                        //如果只有一张图片，需要在主线程主动去修改currImageView的值
+                        if (_images.count == 1) [_currImageView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
                         [data writeToFile:path atomically:YES];
-                        [self.operationDic removeObjectForKey:key];                    }
+                        [self.operationDic removeObjectForKey:key];
+                    }
                 }];
                 [self.queue addOperation:download];
                 [self.operationDic setObject:download forKey:key];
-
             }
         }
     }
 }
 
-- (void)setPageControlPosition:(CGPoint)pageControlPosition {
-    CGRect frame = self.pageControl.frame;
-    frame.origin = pageControlPosition;
-    self.pageControl.frame = frame;
+- (void)setPageControlPosition:(CGPoint)position anchorPoint:(AnchorPoint)anchorPoint{
+    if (anchorPoint == AnchorPointOrigin) {
+        CGRect pageFrame = self.pageControl.frame;
+        pageFrame.origin = position;
+        self.pageControl.frame = pageFrame;
+    } else{//此时pageControl的宽高为0，因此设置的中点位置并不准确，所以先记录，待pageControl的宽高确定之后再设置其中点位置
+        _position = position;
+        _anchorPoint = anchorPoint;
+    }
 }
 
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
-    if (!pageImage || !currentImage) {
-        return;
-    }
+    if (!pageImage || !currentImage) return;
     [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
     [self.pageControl setValue:pageImage forKey:@"_pageImage"];
 }
@@ -243,10 +249,22 @@ typedef enum{
     !self.imageClickBlock?:self.imageClickBlock(self.currIndex);
 }
 
+
+- (void)layoutSubviews {
+    //计算pageControl的宽高，并确定其位置
+    UIView *pageImage = self.pageControl.subviews.firstObject;
+    CGRect pageFrame = self.pageControl.frame;
+    pageFrame.size.width = pageImage.frame.size.width * (2 * _images.count - 1);
+    pageFrame.size.height = pageImage.frame.size.height;
+    self.pageControl.frame = pageFrame;
+    if (_anchorPoint == AnchorPointCenter) {
+        self.pageControl.center = _position;
+    }
+}
+
 //清除沙盒中的图片缓存
 - (void)clearDiskCache {
     NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
-
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cache error:NULL];
     for (NSString *fileName in contents) {
         [[NSFileManager defaultManager] removeItemAtPath:[cache stringByAppendingPathComponent:fileName] error:nil];
@@ -277,9 +295,7 @@ typedef enum{
 - (void)pauseScroll {
     self.direction = DirecNone;
     int index = self.scrollView.contentOffset.x / self.width;
-    if (index == 1) {
-        return;
-    }
+    if (index == 1) return;
     self.currIndex = self.nextIndex;
     self.pageControl.currentPage = self.currIndex;
     self.currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
