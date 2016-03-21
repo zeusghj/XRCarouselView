@@ -237,7 +237,8 @@ typedef enum{
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
     if ([change[NSKeyValueChangeNewKey] intValue] == DirecRight) {
         self.otherImageView.frame = CGRectMake(0, 0, self.width, self.height);
-        self.nextIndex = (self.currIndex - 1) % _images.count;
+        self.nextIndex = self.currIndex - 1;
+        if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
     } else if ([change[NSKeyValueChangeNewKey] intValue] == DirecLeft){
         self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
         self.nextIndex = (self.currIndex + 1) % _images.count;

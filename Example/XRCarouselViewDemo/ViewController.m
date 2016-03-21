@@ -23,7 +23,7 @@
     //传递图片
 //    carouselView.imageArray = @[[UIImage imageNamed:@"1"], [UIImage imageNamed:@"2"], [UIImage imageNamed:@"3"]];
     //既有本地图片也有网络图片
-    carouselView.imageArray = @[[UIImage imageNamed:@"1"]];
+    carouselView.imageArray = @[@"http://www.5068.com/u/faceimg/20140725173411.jpg", [UIImage imageNamed:@"2"], @"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg"];
     //设置每张图片的停留时间
     carouselView.time = 1.5;
     //设置分页控件的图片
