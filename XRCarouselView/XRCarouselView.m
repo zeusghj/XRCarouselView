@@ -45,7 +45,7 @@ typedef enum{
 @end
 
 @implementation XRCarouselView
-
+//创建用来缓存图片的文件夹
 + (void)initialize {
     NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
     BOOL isDir = NO;
@@ -155,6 +155,7 @@ typedef enum{
     }
 }
 
+#pragma mark 下载网络图片
 - (void)downloadImages:(int)index {
     NSString *key = _imageArray[index];
     //从内存缓存中取图片
@@ -195,6 +196,7 @@ typedef enum{
     }
 }
 
+#pragma mark 设置pageControl的位置
 - (void)setPageControlPosition:(CGPoint)position anchorPoint:(AnchorPoint)anchorPoint{
     if (anchorPoint == AnchorPointOrigin) {
         CGRect pageFrame = self.pageControl.frame;
@@ -206,12 +208,14 @@ typedef enum{
     }
 }
 
+#pragma mark 设置pageControl的图片
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
     if (!pageImage || !currentImage) return;
     [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
     [self.pageControl setValue:pageImage forKey:@"_pageImage"];
 }
 
+#pragma mark 设置定时器时间
 - (void)setTime:(NSTimeInterval)time {
     _time = time;
     if (_images.count > 1) {
@@ -220,6 +224,7 @@ typedef enum{
     }
 }
 
+#pragma mark 设置pageControl的隐藏
 - (void)setPageControlHidden:(BOOL)pageControlHidden {
     self.pageControl.hidden = pageControlHidden;
 }
@@ -248,11 +253,12 @@ typedef enum{
     self.otherImageView.image = self.images[self.nextIndex];
 }
 
+#pragma mark 图片点击事件
 - (void)imageClick {
     !self.imageClickBlock?:self.imageClickBlock(self.currIndex);
 }
 
-
+#pragma mark 布局子控件
 - (void)layoutSubviews {
     //计算pageControl的宽高，并确定其位置
     UIView *pageImage = self.pageControl.subviews.firstObject;
@@ -265,7 +271,7 @@ typedef enum{
     }
 }
 
-//清除沙盒中的图片缓存
+#pragma mark 清除沙盒中的图片缓存
 - (void)clearDiskCache {
     NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cache error:NULL];

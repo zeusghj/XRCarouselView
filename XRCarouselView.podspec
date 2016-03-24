@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.social_media_url ="http://www.jianshu.com/users/425e4eed60ca/latest_articles"
   s.platform     = :ios, "7.0"
 
-  s.source       = { :git => "https://github.com/codingZero/XRCarouselView.git", :tag => "1.1.2" }
+  s.source       = { :git => "https://github.com/codingZero/XRCarouselView.git", :tag => s.version }
 
 
   s.source_files  = "XRCarouselView/*.{h,m}"
