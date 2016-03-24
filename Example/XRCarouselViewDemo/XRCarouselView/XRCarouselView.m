@@ -128,7 +128,8 @@ typedef enum{
     if (self = [super initWithFrame:frame]) {
         self.currIndex = 0;
         self.time = 1;
-        [self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew context:nil];
+        self.direction = DirecNone;
+        [self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     }
     return self;
 }
@@ -235,6 +236,7 @@ typedef enum{
 
 #pragma mark- 其它
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if(change[NSKeyValueChangeNewKey] == change[NSKeyValueChangeOldKey]) return;
     if ([change[NSKeyValueChangeNewKey] intValue] == DirecRight) {
         self.otherImageView.frame = CGRectMake(0, 0, self.width, self.height);
         self.nextIndex = self.currIndex - 1;
