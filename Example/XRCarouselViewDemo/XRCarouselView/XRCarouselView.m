@@ -22,6 +22,8 @@ typedef enum{
 @property (nonatomic, strong) NSMutableDictionary *operationDic;
 //滚动方向
 @property (nonatomic, assign) Direction direction;
+//提示信息
+@property (nonatomic, strong) UILabel *promptLabel;
 //显示的imageView
 @property (nonatomic, strong) UIImageView *currImageView;
 //辅助滚动的imageView
@@ -45,6 +47,7 @@ typedef enum{
 @end
 
 @implementation XRCarouselView
+#pragma mark- 初始化方法
 //创建用来缓存图片的文件夹
 + (void)initialize {
     NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
@@ -86,6 +89,18 @@ typedef enum{
     return _queue;
 }
 
+- (UILabel *)promptLabel {
+    if (!_promptLabel) {
+        _promptLabel = [[UILabel alloc] init];
+        _promptLabel.text = @"没有图片哦，赶快去设置吧！";
+        _promptLabel.font = [UIFont systemFontOfSize:20];
+        _promptLabel.textColor = [UIColor blueColor];
+        [_promptLabel sizeToFit];
+        [self addSubview:_promptLabel];
+    }
+    return _promptLabel;
+}
+
 
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
@@ -115,27 +130,52 @@ typedef enum{
     return _pageControl;
 }
 
-#pragma mark- 创建
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    self.scrollView.frame = self.bounds;
-    self.pageControl.center = CGPointMake(self.width * 0.5, self.height - 10);
-    _scrollView.contentOffset = CGPointMake(self.width, 0);
-    _currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
-}
-
+#pragma mark- 构造方法
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         self.currIndex = 0;
-        self.time = 1;
         self.direction = DirecNone;
         [self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     }
     return self;
 }
 
-#pragma mark- 设置相关方法
+- (instancetype)initWithImageArray:(NSArray *)imageArray {
+    return [self initWithImageArray:imageArray imageClickBlock:nil];
+}
+
++ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray {
+    return [self carouselViewWithImageArray:imageArray imageClickBlock:nil];
+}
+
+- (instancetype)initWithImageArray:(NSArray *)imageArray imageClickBlock:(ClickBlock)imageClickBlock {
+    if (self = [super init]) {
+        self.imageArray = imageArray;
+        self.imageClickBlock = imageClickBlock;
+    }
+    return self;
+}
+
++ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray imageClickBlock:(ClickBlock)imageClickBlock {
+    return [[self alloc] initWithImageArray:imageArray imageClickBlock:imageClickBlock];
+}
+
+#pragma mark- --------设置相关方法--------
+#pragma mark 设置控件的frame
+- (void)setFrame:(CGRect)frame {
+    [super setFrame:frame];
+    self.scrollView.frame = self.bounds;
+    self.pageControl.center = CGPointMake(self.width * 0.5, self.height - 10);
+    self.promptLabel.center = CGPointMake(self.width * 0.5, self.height * 0.5);
+    _scrollView.contentOffset = CGPointMake(self.width, 0);
+    _currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
+    [self setScrollViewContentSize];
+}
+
+#pragma mark 设置图片数组
 - (void)setImageArray:(NSArray *)imageArray{
+    if (!imageArray.count) return;
+    self.promptLabel.hidden = YES;
     _imageArray = imageArray;
     _images = [NSMutableArray array];
     for (int i = 0; i < imageArray.count; i++) {
@@ -148,11 +188,86 @@ typedef enum{
     }
     self.currImageView.image = _images.firstObject;
     self.pageControl.numberOfPages = _images.count;
+    [self setScrollViewContentSize];
+}
+
+#pragma mark 设置scrollView的contentSize
+- (void)setScrollViewContentSize {
     if (_images.count > 1) {
-        _scrollView.contentSize = CGSizeMake(self.width * 3, 0);
+        self.scrollView.contentSize = CGSizeMake(self.width * 3, 0);
+        self.time = 2;
     } else {
-        _scrollView.contentSize = CGSizeZero;
+        self.scrollView.contentSize = CGSizeZero;
     }
+}
+
+#pragma mark 设置pageControl的位置
+- (void)setPageControlPosition:(CGPoint)position anchorPoint:(AnchorPoint)anchorPoint{
+    if (anchorPoint == AnchorPointOrigin) {
+        CGRect pageFrame = self.pageControl.frame;
+        pageFrame.origin = position;
+        self.pageControl.frame = pageFrame;
+    } else{//此时pageControl的宽高为0，因此设置的中点位置并不准确，所以先记录，待pageControl的宽高确定之后再设置其中点位置
+        _position = position;
+        _anchorPoint = anchorPoint;
+    }
+}
+
+#pragma mark 设置pageControl的图片
+- (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
+    if (!pageImage || !currentImage) return;
+    [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
+    [self.pageControl setValue:pageImage forKey:@"_pageImage"];
+}
+
+#pragma mark 设置pageControl的隐藏
+- (void)setPageControlHidden:(BOOL)pageControlHidden {
+    self.pageControl.hidden = pageControlHidden;
+}
+
+#pragma mark 设置定时器时间
+- (void)setTime:(NSTimeInterval)time {
+    _time = time;
+    [self startTimer];
+}
+
+#pragma mark- --------定时器相关方法--------
+- (void)startTimer {
+    //如果只有一张图片，则直接返回，不开启定时器
+    if (_images.count <= 1) return;
+    //如果定时器已开启，先停止再重新开启
+    if (self.timer) [self stopTimer];
+    self.timer = [NSTimer timerWithTimeInterval:self.time target:self selector:@selector(nextPage) userInfo:nil repeats:YES];
+    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+}
+
+- (void)stopTimer {
+    [self.timer invalidate];
+    self.timer = nil;
+}
+
+- (void)nextPage {
+    [self.scrollView setContentOffset:CGPointMake(self.width * 2, 0) animated:YES];
+}
+
+#pragma mark- -----------其它-----------
+#pragma mark KVO监听
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
+    if(change[NSKeyValueChangeNewKey] == change[NSKeyValueChangeOldKey]) return;
+    if ([change[NSKeyValueChangeNewKey] intValue] == DirecRight) {
+        self.otherImageView.frame = CGRectMake(0, 0, self.width, self.height);
+        self.nextIndex = self.currIndex - 1;
+        if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
+    } else if ([change[NSKeyValueChangeNewKey] intValue] == DirecLeft){
+        self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
+        self.nextIndex = (self.currIndex + 1) % _images.count;
+    }
+    self.otherImageView.image = self.images[self.nextIndex];
+}
+
+#pragma mark 图片点击事件
+- (void)imageClick {
+    !self.imageClickBlock?:self.imageClickBlock(self.currIndex);
 }
 
 #pragma mark 下载网络图片
@@ -196,70 +311,18 @@ typedef enum{
     }
 }
 
-#pragma mark 设置pageControl的位置
-- (void)setPageControlPosition:(CGPoint)position anchorPoint:(AnchorPoint)anchorPoint{
-    if (anchorPoint == AnchorPointOrigin) {
-        CGRect pageFrame = self.pageControl.frame;
-        pageFrame.origin = position;
-        self.pageControl.frame = pageFrame;
-    } else{//此时pageControl的宽高为0，因此设置的中点位置并不准确，所以先记录，待pageControl的宽高确定之后再设置其中点位置
-        _position = position;
-        _anchorPoint = anchorPoint;
+#pragma mark 清除沙盒中的图片缓存
+- (void)clearDiskCache {
+    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
+    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cache error:NULL];
+    for (NSString *fileName in contents) {
+        [[NSFileManager defaultManager] removeItemAtPath:[cache stringByAppendingPathComponent:fileName] error:nil];
     }
-}
-
-#pragma mark 设置pageControl的图片
-- (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
-    if (!pageImage || !currentImage) return;
-    [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
-    [self.pageControl setValue:pageImage forKey:@"_pageImage"];
-}
-
-#pragma mark 设置定时器时间
-- (void)setTime:(NSTimeInterval)time {
-    _time = time;
-    if (_images.count > 1) {
-        [self.timer invalidate];
-        [self startTimer];
-    }
-}
-
-#pragma mark 设置pageControl的隐藏
-- (void)setPageControlHidden:(BOOL)pageControlHidden {
-    self.pageControl.hidden = pageControlHidden;
-}
-
-#pragma mark- 定时器相关方法
-- (void)startTimer {
-    self.timer = [NSTimer timerWithTimeInterval:self.time target:self selector:@selector(nextPage) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
-}
-
-- (void)nextPage {
-    [self.scrollView setContentOffset:CGPointMake(self.width * 2, 0) animated:YES];
-}
-
-#pragma mark- 其它
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-    if(change[NSKeyValueChangeNewKey] == change[NSKeyValueChangeOldKey]) return;
-    if ([change[NSKeyValueChangeNewKey] intValue] == DirecRight) {
-        self.otherImageView.frame = CGRectMake(0, 0, self.width, self.height);
-        self.nextIndex = self.currIndex - 1;
-        if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
-    } else if ([change[NSKeyValueChangeNewKey] intValue] == DirecLeft){
-        self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
-        self.nextIndex = (self.currIndex + 1) % _images.count;
-    }
-    self.otherImageView.image = self.images[self.nextIndex];
-}
-
-#pragma mark 图片点击事件
-- (void)imageClick {
-    !self.imageClickBlock?:self.imageClickBlock(self.currIndex);
 }
 
 #pragma mark 布局子控件
 - (void)layoutSubviews {
+    [super layoutSubviews];
     //计算pageControl的宽高，并确定其位置
     UIView *pageImage = self.pageControl.subviews.firstObject;
     CGRect pageFrame = self.pageControl.frame;
@@ -271,22 +334,13 @@ typedef enum{
     }
 }
 
-#pragma mark 清除沙盒中的图片缓存
-- (void)clearDiskCache {
-    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
-    NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cache error:NULL];
-    for (NSString *fileName in contents) {
-        [[NSFileManager defaultManager] removeItemAtPath:[cache stringByAppendingPathComponent:fileName] error:nil];
-    }
-}
-
-#pragma mark- UIScrollViewDelegate
+#pragma mark- --------UIScrollViewDelegate--------
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     self.direction = scrollView.contentOffset.x > self.width? DirecLeft : DirecRight;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    [self.timer invalidate];
+    [self stopTimer];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{

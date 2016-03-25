@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "XRCarouselView"
-  s.version      = "1.1.2"
+  s.version      = "2.0.0"
   s.summary      = "The easiest way to use image circulate"
 
   s.homepage     = "https://github.com/codingZero/XRCarouselView"
