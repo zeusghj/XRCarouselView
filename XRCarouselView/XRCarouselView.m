@@ -1,9 +1,8 @@
 //
 //  XRCarouselView.m
-//  test
 //
-//  Created by ibos on 16/3/17.
-//  Copyright © 2016年 ibos. All rights reserved.
+//  Created by 肖睿 on 16/3/17.
+//  Copyright © 2016年 肖睿. All rights reserved.
 //
 
 #import "XRCarouselView.h"
@@ -38,10 +37,6 @@ typedef enum{
 @property (nonatomic, strong) NSTimer *timer;
 //任务队列
 @property (nonatomic, strong) NSOperationQueue *queue;
-//记录pageControl的坐标
-@property (nonatomic, assign) CGPoint position;
-//记录pageControl的锚点
-//@property (nonatomic, assign) AnchorPoint anchorPoint;
 @end
 
 @implementation XRCarouselView
