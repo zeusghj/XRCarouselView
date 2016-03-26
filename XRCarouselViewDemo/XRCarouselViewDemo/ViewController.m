@@ -10,6 +10,7 @@
 #import "XRCarouselView.h"
 @interface ViewController ()
 @property (nonatomic, strong) XRCarouselView *carouselView;
+@property (weak, nonatomic) IBOutlet XRCarouselView *carouselView1;
 @end
 
 @implementation ViewController
@@ -33,20 +34,20 @@
 //    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
     
     //创建方式3
-    self.carouselView = [[XRCarouselView alloc] initWithImageArray:arr2 imageClickBlock:^(NSInteger index) {
-        NSLog(@"第%ld张图片被点击", index);
-    }];
-    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
-    
+//    self.carouselView = [[XRCarouselView alloc] initWithImageArray:arr2 imageClickBlock:^(NSInteger index) {
+//        NSLog(@"第%ld张图片被点击", index);
+//    }];
+//    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
+//    
     //创建方式4
 //    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3];
 //    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
     
     //创建方式5
-//    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3 imageClickBlock:^(NSInteger index) {
-//        NSLog(@"第%ld张图片被点击", index);
-//    }];
-//    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
+    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3 imageClickBlock:^(NSInteger index) {
+        NSLog(@"第%ld张图片被点击", index);
+    }];
+    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
 
     
     //设置每张图片的停留时间
@@ -58,6 +59,11 @@
     //隐藏分页控件
 //    carouselView.pageControlHidden = YES;
     [self.view addSubview:_carouselView];
+    
+    
+    
+//    _carouselView1.imageArray = arr2;
+//    _carouselView1.time = 1;
     
 }
 

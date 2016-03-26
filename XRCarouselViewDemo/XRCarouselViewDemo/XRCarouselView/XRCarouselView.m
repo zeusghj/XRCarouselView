@@ -131,15 +131,6 @@ typedef enum{
 }
 
 #pragma mark- 构造方法
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        self.currIndex = 0;
-        self.direction = DirecNone;
-        [self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-    }
-    return self;
-}
-
 - (instancetype)initWithImageArray:(NSArray *)imageArray {
     return [self initWithImageArray:imageArray imageClickBlock:nil];
 }
@@ -164,6 +155,7 @@ typedef enum{
 #pragma mark 设置控件的frame
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
+    [self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     self.scrollView.frame = self.bounds;
     self.pageControl.center = CGPointMake(self.width * 0.5, self.height - 10);
     self.promptLabel.center = CGPointMake(self.width * 0.5, self.height * 0.5);
