@@ -23,18 +23,26 @@ ______
 7.性能好，占用内存少，轮播流畅
 
 #如何集成XRCarouselView
-
-####手动导入
+###导入
+######方式一：手动导入
 将XRCarouselView文件夹中的所有文件添加到项目中
-####cocoapods导入
+######方式二：cocoapods导入
 pod 'XRCarouselView'
 
-####使用
+###创建
+######方式一：代码创建
 1.导入主头文件 XRCarouselView.h
 
-2.创建XRCarouselView，设置图片(路径)数组
+2.创建XRCarouselView，设置各属性
 
 3.将XRCarouselView添加到要展示到view上面
+######方式二：直接添加到xib\sb
+1.添加一个view到xib\sb上
+
+2.设置view的class为XRCarouselView
+
+3.拖线到.m文件中，设置各属性
+
 
 
 #XRCarouselView的常用属性方法
