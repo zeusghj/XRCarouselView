@@ -51,9 +51,9 @@ pod 'XRCarouselView'
 
 2.time：设置每页的停留时间
 
-3.setPageControlPosition:anchorPoint:：设置分页控件的位置，第二个参数表示是设置中点还是原点
+3.startTimer：开启定时器，默认已开启
 
-4.pageControlHidden：隐藏分页控件
+4.stopTimer：停止定时器
 
 5.setPageImageView:andCurrentImage:：设置分页控件的图片
 
