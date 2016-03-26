@@ -34,8 +34,6 @@ typedef enum{
 @property (nonatomic, assign) NSInteger nextIndex;
 //滚动视图
 @property (nonatomic, strong) UIScrollView *scrollView;
-//分页控件
-@property (nonatomic, strong) UIPageControl *pageControl;
 //定时器
 @property (nonatomic, strong) NSTimer *timer;
 //任务队列
@@ -43,7 +41,7 @@ typedef enum{
 //记录pageControl的坐标
 @property (nonatomic, assign) CGPoint position;
 //记录pageControl的锚点
-@property (nonatomic, assign) AnchorPoint anchorPoint;
+//@property (nonatomic, assign) AnchorPoint anchorPoint;
 @end
 
 @implementation XRCarouselView
@@ -125,6 +123,7 @@ typedef enum{
     if (!_pageControl) {
         _pageControl = [[UIPageControl alloc] init];
         _pageControl.hidesForSinglePage = YES;
+        _pageControl.userInteractionEnabled = NO;
         [self addSubview:_pageControl];
     }
     return _pageControl;
@@ -193,28 +192,12 @@ typedef enum{
     }
 }
 
-#pragma mark 设置pageControl的位置
-- (void)setPageControlPosition:(CGPoint)position anchorPoint:(AnchorPoint)anchorPoint{
-    if (anchorPoint == AnchorPointOrigin) {
-        CGRect pageFrame = self.pageControl.frame;
-        pageFrame.origin = position;
-        self.pageControl.frame = pageFrame;
-    } else{//此时pageControl的宽高为0，因此设置的中点位置并不准确，所以先记录，待pageControl的宽高确定之后再设置其中点位置
-        _position = position;
-        _anchorPoint = anchorPoint;
-    }
-}
 
 #pragma mark 设置pageControl的图片
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
     if (!pageImage || !currentImage) return;
     [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
     [self.pageControl setValue:pageImage forKey:@"_pageImage"];
-}
-
-#pragma mark 设置pageControl的隐藏
-- (void)setPageControlHidden:(BOOL)pageControlHidden {
-    self.pageControl.hidden = pageControlHidden;
 }
 
 #pragma mark 设置定时器时间
@@ -309,20 +292,6 @@ typedef enum{
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cache error:NULL];
     for (NSString *fileName in contents) {
         [[NSFileManager defaultManager] removeItemAtPath:[cache stringByAppendingPathComponent:fileName] error:nil];
-    }
-}
-
-#pragma mark 布局子控件
-- (void)layoutSubviews {
-    [super layoutSubviews];
-    //计算pageControl的宽高，并确定其位置
-    UIView *pageImage = self.pageControl.subviews.firstObject;
-    CGRect pageFrame = self.pageControl.frame;
-    pageFrame.size.width = pageImage.frame.size.width * (2 * _images.count - 1);
-    pageFrame.size.height = pageImage.frame.size.height;
-    self.pageControl.frame = pageFrame;
-    if (_anchorPoint == AnchorPointCenter) {
-        self.pageControl.center = _position;
     }
 }
 

@@ -54,10 +54,14 @@
     _carouselView.time = 1.5;
     //设置分页控件的图片
     [_carouselView setPageImage:[UIImage imageNamed:@"other"] andCurrentImage:[UIImage imageNamed:@"current"]];
-    //设置分页控件的位置，第二个参数表示是设置中点还是原点
-    [_carouselView setPageControlPosition:CGPointMake(300, 160) anchorPoint:AnchorPointCenter];
+    //设置分页控件的frame
+    CGFloat width = arr3.count * 30;
+    CGFloat height = 20;
+    CGFloat x = _carouselView.frame.size.width - width - 10;
+    CGFloat y = _carouselView.frame.size.height - height;
+    _carouselView.pageControl.frame = CGRectMake(x, y, width, height);
     //隐藏分页控件
-//    carouselView.pageControlHidden = YES;
+//    _carouselView.pageControl.hidden = YES;
     [self.view addSubview:_carouselView];
     
     
