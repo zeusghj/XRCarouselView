@@ -5,6 +5,8 @@ The easiest way to use image circulate
 
 仅仅两个imageView实现图片轮播
 
+实现原理[请看这里](http://www.jianshu.com/p/ef03ec7f23b2)
+
 ______
 
 #XRCarouselView的优点
