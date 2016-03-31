@@ -20,7 +20,7 @@ ______
 
 5.自定义分页控件的图片，就是这么个性
 
-6.自带图片缓存，一次加载，永久使用
+6.自带图片下载与缓存，一次加载，永久使用
 
 7.性能好，占用内存少，轮播流畅
 
@@ -51,11 +51,11 @@ pod 'XRCarouselView'
 
 1.imageArray：要轮播的图片数组，可传本地图片或网络图片路径
 
-2.time：设置每页的停留时间
+2.describeArray：图片描述的字符串数组，应与图片顺序对应
 
-3.startTimer：开启定时器，默认已开启
+3.time：设置每页的停留时间
 
-4.stopTimer：停止定时器
+4.startTimer\stopTimer：开启\停止定时器，默认已开启
 
 5.setPageImageView:andCurrentImage:：设置分页控件的图片
 

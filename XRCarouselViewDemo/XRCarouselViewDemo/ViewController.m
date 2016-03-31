@@ -52,7 +52,7 @@
     self.carouselView.frame = CGRectMake(0, 100, 375, 180);
     
     //设置每张图片的停留时间
-    _carouselView.time = 1.5;
+//    _carouselView.time = 1.5;
     //设置分页控件的图片
     [_carouselView setPageImage:[UIImage imageNamed:@"other"] andCurrentImage:[UIImage imageNamed:@"current"]];
     //设置分页控件的frame
@@ -68,7 +68,6 @@
     
     
     _carouselView1.imageArray = arr3;
-    _carouselView1.describeArray = describeArray;
     _carouselView1.describeLabel.center = CGPointMake(375 / 2, 10);
     _carouselView1.time = 2;
     

@@ -117,7 +117,7 @@ typedef enum{
 - (UILabel *)describeLabel {
     if (!_describeLabel) {
         _describeLabel = [[UILabel alloc] init];
-        _describeLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        _describeLabel.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
         _describeLabel.textColor = [UIColor whiteColor];
         _describeLabel.textAlignment = NSTextAlignmentCenter;
         _describeLabel.font = [UIFont systemFontOfSize:13];
@@ -210,7 +210,15 @@ typedef enum{
 
 - (void)setDescribeArray:(NSArray *)describeArray{
     _describeArray = describeArray;
+    //如果描述的个数与图片个数不一致，则补空字符串
     if (describeArray && describeArray.count > 0) {
+        if (describeArray.count < _images.count) {
+            NSMutableArray *describes = [NSMutableArray arrayWithArray:describeArray];
+            for (NSInteger i = describeArray.count; i < _images.count; i++) {
+                [describes addObject:@""];
+            }
+            _describeArray = describes;
+        }
         self.describeLabel.hidden = NO;
         _describeLabel.text = _describeArray.firstObject;
     }
@@ -220,7 +228,7 @@ typedef enum{
 - (void)setScrollViewContentSize {
     if (_images.count > 1) {
         self.scrollView.contentSize = CGSizeMake(self.width * 3, 0);
-        self.time = 2;
+        self.time = 5;
     } else {
         self.scrollView.contentSize = CGSizeZero;
     }
