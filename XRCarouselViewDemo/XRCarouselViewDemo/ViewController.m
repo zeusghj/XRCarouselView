@@ -43,22 +43,23 @@
 //    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3];
 //    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
     
+    NSArray *describeArray = @[@"这是第一张图片的描述", @"这是第二张图片的描述", @"这是第三张图片的描述", @"这是第四张图片的描述"];
     //创建方式5
-    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3 imageClickBlock:^(NSInteger index) {
+    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3 describeArray:describeArray];
+    self.carouselView.imageClickBlock = ^(NSInteger index) {
         NSLog(@"第%ld张图片被点击", index);
-    }];
+    };
     self.carouselView.frame = CGRectMake(0, 100, 375, 180);
-
     
     //设置每张图片的停留时间
-    _carouselView.time = 3;
+    _carouselView.time = 1.5;
     //设置分页控件的图片
     [_carouselView setPageImage:[UIImage imageNamed:@"other"] andCurrentImage:[UIImage imageNamed:@"current"]];
     //设置分页控件的frame
     CGFloat width = arr3.count * 30;
     CGFloat height = 20;
     CGFloat x = _carouselView.frame.size.width - width - 10;
-    CGFloat y = _carouselView.frame.size.height - height;
+    CGFloat y = _carouselView.frame.size.height - height - 20;
     _carouselView.pageControl.frame = CGRectMake(x, y, width, height);
     //隐藏分页控件
 //    _carouselView.pageControl.hidden = YES;
@@ -66,8 +67,10 @@
     
     
     
-//    _carouselView1.imageArray = arr2;
-//    _carouselView1.time = 1;
+    _carouselView1.imageArray = arr3;
+    _carouselView1.describeArray = describeArray;
+    _carouselView1.describeLabel.center = CGPointMake(375 / 2, 10);
+    _carouselView1.time = 2;
     
 }
 

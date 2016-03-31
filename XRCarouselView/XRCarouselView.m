@@ -114,6 +114,20 @@ typedef enum{
     return _scrollView;
 }
 
+- (UILabel *)describeLabel {
+    if (!_describeLabel) {
+        _describeLabel = [[UILabel alloc] init];
+        _describeLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.6];
+        _describeLabel.textColor = [UIColor whiteColor];
+        _describeLabel.textAlignment = NSTextAlignmentCenter;
+        _describeLabel.font = [UIFont systemFontOfSize:13];
+        _describeLabel.hidden = YES;
+        [self addSubview:_describeLabel];
+    }
+    return _describeLabel;
+}
+
+
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
         _pageControl = [[UIPageControl alloc] init];
@@ -133,6 +147,17 @@ typedef enum{
     return [self carouselViewWithImageArray:imageArray imageClickBlock:nil];
 }
 
+- (instancetype)initWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray {
+    if (self = [self initWithImageArray:imageArray]) {
+        self.describeArray = describeArray;
+    }
+    return self;
+}
+
++ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray {
+    return [[self alloc] initWithImageArray:imageArray describeArray:describeArray];
+}
+
 - (instancetype)initWithImageArray:(NSArray *)imageArray imageClickBlock:(ClickBlock)imageClickBlock {
     if (self = [super init]) {
         self.imageArray = imageArray;
@@ -145,12 +170,18 @@ typedef enum{
     return [[self alloc] initWithImageArray:imageArray imageClickBlock:imageClickBlock];
 }
 
+
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@"direction"];
+}
+
 #pragma mark- --------设置相关方法--------
 #pragma mark 设置控件的frame
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
     [self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     self.scrollView.frame = self.bounds;
+    self.describeLabel.frame = CGRectMake(0, self.height - 20, self.width, 20);
     self.pageControl.center = CGPointMake(self.width * 0.5, self.height - 10);
     self.promptLabel.center = CGPointMake(self.width * 0.5, self.height * 0.5);
     _scrollView.contentOffset = CGPointMake(self.width, 0);
@@ -175,6 +206,14 @@ typedef enum{
     self.currImageView.image = _images.firstObject;
     self.pageControl.numberOfPages = _images.count;
     [self setScrollViewContentSize];
+}
+
+- (void)setDescribeArray:(NSArray *)describeArray{
+    _describeArray = describeArray;
+    if (describeArray && describeArray.count > 0) {
+        self.describeLabel.hidden = NO;
+        _describeLabel.text = _describeArray.firstObject;
+    }
 }
 
 #pragma mark 设置scrollView的contentSize
@@ -318,6 +357,7 @@ typedef enum{
     self.currIndex = self.nextIndex;
     self.pageControl.currentPage = self.currIndex;
     self.currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
+    self.describeLabel.text = self.describeArray[self.currIndex];
     self.currImageView.image = self.otherImageView.image;
     self.scrollView.contentOffset = CGPointMake(self.width, 0);
 }
