@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		99326F321CACC201007E138D /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 99326F2D1CACC201007E138D /* 2.jpg */; };
+		99326F331CACC201007E138D /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 99326F2E1CACC201007E138D /* 3.jpg */; };
+		99326F341CACC201007E138D /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 99326F2F1CACC201007E138D /* 1.jpg */; };
+		99326F351CACC201007E138D /* current.png in Resources */ = {isa = PBXBuildFile; fileRef = 99326F301CACC201007E138D /* current.png */; };
+		99326F361CACC201007E138D /* other.png in Resources */ = {isa = PBXBuildFile; fileRef = 99326F311CACC201007E138D /* other.png */; };
 		99C271921C9AD5C000682904 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271911C9AD5C000682904 /* main.m */; };
 		99C271951C9AD5C000682904 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271941C9AD5C000682904 /* AppDelegate.m */; };
 		99C271981C9AD5C000682904 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271971C9AD5C000682904 /* ViewController.m */; };
@@ -18,6 +23,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		99326F2D1CACC201007E138D /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
+		99326F2E1CACC201007E138D /* 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 3.jpg; sourceTree = "<group>"; };
+		99326F2F1CACC201007E138D /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
+		99326F301CACC201007E138D /* current.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = current.png; sourceTree = "<group>"; };
+		99326F311CACC201007E138D /* other.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = other.png; sourceTree = "<group>"; };
 		99C2718D1C9AD5C000682904 /* XRCarouselViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XRCarouselViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99C271911C9AD5C000682904 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		99C271931C9AD5C000682904 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -44,6 +54,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		99326F2C1CACC201007E138D /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				99326F2D1CACC201007E138D /* 2.jpg */,
+				99326F2E1CACC201007E138D /* 3.jpg */,
+				99326F2F1CACC201007E138D /* 1.jpg */,
+				99326F301CACC201007E138D /* current.png */,
+				99326F311CACC201007E138D /* other.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		99C271841C9AD5C000682904 = {
 			isa = PBXGroup;
 			children = (
@@ -69,6 +91,7 @@
 				99C271961C9AD5C000682904 /* ViewController.h */,
 				99C271971C9AD5C000682904 /* ViewController.m */,
 				99C271991C9AD5C000682904 /* Main.storyboard */,
+				99326F2C1CACC201007E138D /* Images */,
 				99C2719C1C9AD5C000682904 /* Assets.xcassets */,
 				99C2719E1C9AD5C000682904 /* LaunchScreen.storyboard */,
 				99C271A11C9AD5C000682904 /* Info.plist */,
@@ -152,9 +175,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99326F331CACC201007E138D /* 3.jpg in Resources */,
+				99326F351CACC201007E138D /* current.png in Resources */,
+				99326F341CACC201007E138D /* 1.jpg in Resources */,
 				99C271A01C9AD5C000682904 /* LaunchScreen.storyboard in Resources */,
 				99C271AB1C9AD5C900682904 /* placeholder.png in Resources */,
 				99C2719D1C9AD5C000682904 /* Assets.xcassets in Resources */,
+				99326F321CACC201007E138D /* 2.jpg in Resources */,
+				99326F361CACC201007E138D /* other.png in Resources */,
 				99C2719B1C9AD5C000682904 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -280,6 +308,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = XRCarouselViewDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiaorui.NB.XRCarouselViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -291,6 +320,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = XRCarouselViewDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xiaorui.NB.XRCarouselViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -316,6 +346,7 @@
 				99C271A61C9AD5C000682904 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
