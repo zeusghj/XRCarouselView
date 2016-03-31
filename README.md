@@ -64,7 +64,7 @@ pod 'XRCarouselView'
 7.clearDiskCache：清除沙盒中的图片缓存
 
 #效果演示
-![](http://ww2.sinaimg.cn/large/b68232a1gw1f208x08t45g20a80hz4kl.gif)
+![](http://ww1.sinaimg.cn/large/b68232a1gw1f2g66tc8vkg20ad05b7tf.gif)
 
 
 
