@@ -51,7 +51,7 @@
 
     
     //设置每张图片的停留时间
-    _carouselView.time = 1.5;
+    _carouselView.time = 3;
     //设置分页控件的图片
     [_carouselView setPageImage:[UIImage imageNamed:@"other"] andCurrentImage:[UIImage imageNamed:@"current"]];
     //设置分页控件的frame
