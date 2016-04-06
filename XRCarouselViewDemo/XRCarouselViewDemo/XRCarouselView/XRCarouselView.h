@@ -37,7 +37,6 @@ typedef void(^ClickBlock)(NSInteger index);
 //点击图片后要执行的操作，会返回图片在数组中的索引
 @property (nonatomic, copy) ClickBlock imageClickBlock;
 
-
 #pragma mark 构造方法
 - (instancetype)initWithImageArray:(NSArray *)imageArray;
 + (instancetype)carouselViewWithImageArray:(NSArray *)imageArray;

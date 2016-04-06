@@ -286,6 +286,14 @@ typedef enum{
     self.otherImageView.image = self.images[self.nextIndex];
 }
 
+#pragma mark 布局子控件
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    //有导航控制器时，会默认在scrollview上方添加64的内边距，这里强制设置为0
+    self.scrollView.contentInset = UIEdgeInsetsZero;
+}
+
+
 #pragma mark 图片点击事件
 - (void)imageClick {
     !self.imageClickBlock?:self.imageClickBlock(self.currIndex);
@@ -298,40 +306,41 @@ typedef enum{
     UIImage *image = [self.imageDic objectForKey:key];
     if (image) {
         _images[index] = image;
-    }else{
-        //从沙盒缓存中取图片
-        NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
-        NSString *path = [cache stringByAppendingPathComponent:[key lastPathComponent]];
-        NSData *data = [NSData dataWithContentsOfFile:path];
-        if (data) {
-            image = [UIImage imageWithData:data];
-            _images[index] = image;
-            [self.imageDic setObject:image forKey:key];
-        }else{
-            //下载图片
-            NSBlockOperation *download = [self.operationDic objectForKey:key];
-            if (!download) {
-                //创建一个操作
-                download = [NSBlockOperation blockOperationWithBlock:^{
-                    NSURL *url = [NSURL URLWithString:key];
-                    NSData *data = [NSData dataWithContentsOfURL:url];
-                    if (data) {
-                        UIImage *image = [UIImage imageWithData:data];
-                        [self.imageDic setObject:image forKey:key];
-                        self.images[index] = image;
-                        //如果下载的图片为当前要显示的图片，直接到主线程给imageView赋值，否则要等到下一轮才会显示
-                        if (_currIndex == index) {
-                            [_currImageView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
-                        }
-                        [data writeToFile:path atomically:YES];
-                        [self.operationDic removeObjectForKey:key];
-                    }
-                }];
-                [self.queue addOperation:download];
-                [self.operationDic setObject:download forKey:key];
-            }
-        }
+        return;
     }
+    //从沙盒缓存中取图片
+    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
+    NSString *path = [cache stringByAppendingPathComponent:[key lastPathComponent]];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    if (data) {
+        image = [UIImage imageWithData:data];
+        _images[index] = image;
+        [self.imageDic setObject:image forKey:key];
+        return;
+    }
+    //下载图片
+    NSBlockOperation *download = [self.operationDic objectForKey:key];
+    if (download) return;
+    //创建一个操作
+    download = [NSBlockOperation blockOperationWithBlock:^{
+        NSURL *url = [NSURL URLWithString:key];
+        NSData *data = [NSData dataWithContentsOfURL:url];
+        if (!data) return;
+        UIImage *image = [UIImage imageWithData:data];
+        //取到的data有可能不是图片
+        if (image) {
+            [self.imageDic setObject:image forKey:key];
+            self.images[index] = image;
+            //如果下载的图片为当前要显示的图片，直接到主线程给imageView赋值，否则要等到下一轮才会显示
+            if (_currIndex == index) [_currImageView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
+            [data writeToFile:path atomically:YES];
+        }
+        [self.operationDic removeObjectForKey:key];
+        
+    }];
+    [self.queue addOperation:download];
+    [self.operationDic setObject:download forKey:key];
+    
 }
 
 #pragma mark 清除沙盒中的图片缓存
