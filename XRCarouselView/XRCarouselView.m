@@ -6,6 +6,10 @@
 //
 
 #import "XRCarouselView.h"
+
+
+#define DEFAULTTIME 5
+
 typedef enum{
     DirecNone,
     DirecLeft,
@@ -228,7 +232,7 @@ typedef enum{
 - (void)setScrollViewContentSize {
     if (_images.count > 1) {
         self.scrollView.contentSize = CGSizeMake(self.width * 3, 0);
-        self.time = 5;
+        [self startTimer];
     } else {
         self.scrollView.contentSize = CGSizeZero;
     }
@@ -254,7 +258,7 @@ typedef enum{
     if (_images.count <= 1) return;
     //如果定时器已开启，先停止再重新开启
     if (self.timer) [self stopTimer];
-    self.timer = [NSTimer timerWithTimeInterval:self.time target:self selector:@selector(nextPage) userInfo:nil repeats:YES];
+    self.timer = [NSTimer timerWithTimeInterval:_time < 1? DEFAULTTIME : _time target:self selector:@selector(nextPage) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
@@ -315,8 +319,10 @@ typedef enum{
                         UIImage *image = [UIImage imageWithData:data];
                         [self.imageDic setObject:image forKey:key];
                         self.images[index] = image;
-                        //如果只有一张图片，需要在主线程主动去修改currImageView的值
-                        if (_images.count == 1) [_currImageView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
+                        //如果下载的图片为当前要显示的图片，直接到主线程给imageView赋值，否则要等到下一轮才会显示
+                        if (_currIndex == index) {
+                            [_currImageView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
+                        }
                         [data writeToFile:path atomically:YES];
                         [self.operationDic removeObjectForKey:key];
                     }
