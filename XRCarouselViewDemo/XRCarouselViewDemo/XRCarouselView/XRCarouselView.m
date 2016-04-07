@@ -174,16 +174,10 @@ typedef enum{
     return [[self alloc] initWithImageArray:imageArray imageClickBlock:imageClickBlock];
 }
 
-
-- (void)dealloc {
-    [self removeObserver:self forKeyPath:@"direction"];
-}
-
 #pragma mark- --------设置相关方法--------
 #pragma mark 设置控件的frame
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    [self addObserver:self forKeyPath:@"direction" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
     self.scrollView.frame = self.bounds;
     self.describeLabel.frame = CGRectMake(0, self.height - 20, self.width, 20);
     self.pageControl.center = CGPointMake(self.width * 0.5, self.height - 10);
@@ -191,6 +185,22 @@ typedef enum{
     _scrollView.contentOffset = CGPointMake(self.width, 0);
     _currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
     [self setScrollViewContentSize];
+}
+
+#pragma mark 设置滚动方向
+- (void)setDirection:(Direction)direction {
+    if (_direction == direction) return;
+    _direction = direction;
+    if (direction == DirecNone) return;
+    if (direction == DirecRight) {
+        self.otherImageView.frame = CGRectMake(0, 0, self.width, self.height);
+        self.nextIndex = self.currIndex - 1;
+        if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
+    } else if (direction == DirecLeft){
+        self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
+        self.nextIndex = (self.currIndex + 1) % _images.count;
+    }
+    self.otherImageView.image = self.images[self.nextIndex];
 }
 
 #pragma mark 设置图片数组
@@ -212,6 +222,8 @@ typedef enum{
     [self setScrollViewContentSize];
 }
 
+
+#pragma mark 设置描述数组
 - (void)setDescribeArray:(NSArray *)describeArray{
     _describeArray = describeArray;
     //如果描述的个数与图片个数不一致，则补空字符串
@@ -272,20 +284,6 @@ typedef enum{
 }
 
 #pragma mark- -----------其它-----------
-#pragma mark KVO监听
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-    if(change[NSKeyValueChangeNewKey] == change[NSKeyValueChangeOldKey]) return;
-    if ([change[NSKeyValueChangeNewKey] intValue] == DirecRight) {
-        self.otherImageView.frame = CGRectMake(0, 0, self.width, self.height);
-        self.nextIndex = self.currIndex - 1;
-        if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
-    } else if ([change[NSKeyValueChangeNewKey] intValue] == DirecLeft){
-        self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
-        self.nextIndex = (self.currIndex + 1) % _images.count;
-    }
-    self.otherImageView.image = self.images[self.nextIndex];
-}
-
 #pragma mark 布局子控件
 - (void)layoutSubviews {
     [super layoutSubviews];
@@ -296,7 +294,11 @@ typedef enum{
 
 #pragma mark 图片点击事件
 - (void)imageClick {
-    !self.imageClickBlock?:self.imageClickBlock(self.currIndex);
+    if (self.imageClickBlock) {
+        self.imageClickBlock(self.currIndex);
+    } else if ([_delegate respondsToSelector:@selector(carouselView:didClickImage:)]){
+        [_delegate carouselView:self didClickImage:self.currIndex];
+    }
 }
 
 #pragma mark 下载网络图片
@@ -354,7 +356,8 @@ typedef enum{
 
 #pragma mark- --------UIScrollViewDelegate--------
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    self.direction = scrollView.contentOffset.x > self.width? DirecLeft : DirecRight;
+    CGFloat offsetX = scrollView.contentOffset.x;
+    self.direction = offsetX > self.width? DirecLeft : offsetX < self.width? DirecRight : DirecNone;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -374,9 +377,8 @@ typedef enum{
 }
 
 - (void)pauseScroll {
-    self.direction = DirecNone;
-    int index = self.scrollView.contentOffset.x / self.width;
-    if (index == 1) return;
+    //等于1表示没滚动
+    if (self.scrollView.contentOffset.x / self.width == 1) return;
     self.currIndex = self.nextIndex;
     self.pageControl.currentPage = self.currIndex;
     self.currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
