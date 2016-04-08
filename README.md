@@ -60,4 +60,9 @@ pod 'XRCarouselView'
 
 
 
+######最后给大家推荐一个滚动视图隐藏导航栏的框架，轻松集成
+
+[https://github.com/HelloYeah/HYNavBarHidden](https://github.com/HelloYeah/HYNavBarHidden)
+
+![1.gif](http://upload-images.jianshu.io/upload_images/1338042-b49f8c85cef44460.gif?imageMogr2/auto-orient/strip)
     
