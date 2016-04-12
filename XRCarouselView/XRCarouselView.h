@@ -60,7 +60,8 @@ typedef void(^ClickBlock)(NSInteger index);
 
 
 /**
- *  每一页停留时间，默认为5s，最少1秒
+ *  每一页停留时间，默认为5s，最少1s
+ *  当设置的值小于1s时，则为默认值
  */
 @property (nonatomic, assign) NSTimeInterval time;
 

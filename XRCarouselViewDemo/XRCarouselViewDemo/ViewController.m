@@ -66,7 +66,7 @@
     [self.view addSubview:_carouselView];
     
     
-    
+    //最简单的使用方式
     _carouselView1.imageArray = arr2;
     _carouselView1.time = 2;
     

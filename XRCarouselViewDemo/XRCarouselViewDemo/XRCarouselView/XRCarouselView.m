@@ -354,10 +354,24 @@ typedef enum{
     }
 }
 
+#pragma mark 当图片滚动过半时就修改当前页码
+- (void)changeCurrentPageWithOffset:(CGFloat)offsetX {
+    if (offsetX < self.width * 0.5) {
+        NSInteger index = self.currIndex - 1;
+        if (index < 0) index = self.images.count - 1;
+        _pageControl.currentPage = index;
+    } else if (offsetX > self.width * 1.5){
+        _pageControl.currentPage = (self.currIndex + 1) % self.images.count;
+    } else {
+        _pageControl.currentPage = self.currIndex;
+    }
+}
+
 #pragma mark- --------UIScrollViewDelegate--------
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offsetX = scrollView.contentOffset.x;
     self.direction = offsetX > self.width? DirecLeft : offsetX < self.width? DirecRight : DirecNone;
+    [self changeCurrentPageWithOffset:offsetX];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {

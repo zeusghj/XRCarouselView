@@ -1,4 +1,4 @@
-# XRCarouselView
+#XRCarouselView
 The easiest way to use image circulate
 
 超简单好用的图片轮播框架，两个imageView实现
@@ -57,12 +57,4 @@ pod 'XRCarouselView'
 
 #效果演示
 ![](http://ww1.sinaimg.cn/large/b68232a1gw1f2g66tc8vkg20ad05b7tf.gif)
-
-
-
-######最后给大家推荐一个滚动视图隐藏导航栏的框架，轻松集成
-
-[https://github.com/HelloYeah/HYNavBarHidden](https://github.com/HelloYeah/HYNavBarHidden)
-
-![1.gif](http://upload-images.jianshu.io/upload_images/1338042-b49f8c85cef44460.gif?imageMogr2/auto-orient/strip)
     
