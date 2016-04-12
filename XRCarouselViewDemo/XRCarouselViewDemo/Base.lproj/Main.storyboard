@@ -29,13 +29,6 @@
                                     <action selector="start:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AZ0-Fc-heu"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yYt-Z4-LnB" customClass="XRCarouselView">
-                                <rect key="frame" x="0.0" y="447" width="375" height="180"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="180" id="36B-MZ-wre"/>
-                                </constraints>
-                            </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0N9-7N-okc">
                                 <rect key="frame" x="215" y="319" width="50" height="30"/>
                                 <constraints>
@@ -47,6 +40,13 @@
                                     <action selector="stop:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Au9-OF-EGy"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yYt-Z4-LnB" customClass="XRCarouselView">
+                                <rect key="frame" x="0.0" y="447" width="375" height="180"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="180" id="36B-MZ-wre"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>

@@ -182,8 +182,6 @@ typedef enum{
     self.describeLabel.frame = CGRectMake(0, self.height - 20, self.width, 20);
     self.pageControl.center = CGPointMake(self.width * 0.5, self.height - 10);
     self.promptLabel.center = CGPointMake(self.width * 0.5, self.height * 0.5);
-    _scrollView.contentOffset = CGPointMake(self.width, 0);
-    _currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
     [self setScrollViewContentSize];
 }
 
@@ -244,12 +242,15 @@ typedef enum{
 - (void)setScrollViewContentSize {
     if (_images.count > 1) {
         self.scrollView.contentSize = CGSizeMake(self.width * 3, 0);
+        self.scrollView.contentOffset = CGPointMake(self.width, 0);
+        self.currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
         [self startTimer];
     } else {
         self.scrollView.contentSize = CGSizeZero;
+        self.scrollView.contentOffset = CGPointZero;
+        self.currImageView.frame = CGRectMake(0, 0, self.width, self.height);
     }
 }
-
 
 #pragma mark 设置pageControl的图片
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
