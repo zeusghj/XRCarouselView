@@ -31,6 +31,15 @@ typedef void(^ClickBlock)(NSInteger index);
  */
 
 
+/**
+*  注意：
+*  通过xib/sb创建时，获取到的尺寸是不准确的
+*  比如xib/sb宽度是320，运行在宽度375的设备上时，依旧只有320
+*  解决办法：通过代码重新设置frame即可
+*
+*/
+
+
 
 #pragma mark 属性
 

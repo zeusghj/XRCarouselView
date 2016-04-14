@@ -39,7 +39,7 @@
     
     
     //设置frame
-    self.carouselView.frame = CGRectMake(0, 100, 375, 180);
+    self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
     
     //用block处理图片点击
     self.carouselView.imageClickBlock = ^(NSInteger index) {
@@ -66,8 +66,12 @@
     [self.view addSubview:_carouselView];
     
     
-    //最简单的使用方式
-    _carouselView1.imageArray = arr2;
+    //通过storyboard创建的轮播控件
+    _carouselView1.imageArray = arr3;
+    //通过xib/sb创建时，从xib/sb获取到的尺寸是不准确的，所以需要重新设置frame
+    CGRect frame = _carouselView1.frame;
+    frame.size.width = [UIScreen mainScreen].bounds.size.width;
+    _carouselView1.frame = frame;
     _carouselView1.time = 2;
 }
 
