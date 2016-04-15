@@ -252,12 +252,19 @@ typedef enum{
 }
 
 
-#pragma mark 设置pageControl的图片
+#pragma mark 设置pageControl的指示器图片
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
     if (!pageImage || !currentImage) return;
     self.pageImageSize = pageImage.size;
     [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
     [self.pageControl setValue:pageImage forKey:@"_pageImage"];
+}
+
+#pragma mark 设置pageControl的指示器颜色
+- (void)setPageColor:(UIColor *)color andCurrentPageColor:(UIColor *)currentColor {
+    _pageControl.pageIndicatorTintColor = color;
+    //  设置当前页码指示器的颜色
+    _pageControl.currentPageIndicatorTintColor = currentColor;
 }
 
 #pragma mark 设置pageControl的位置

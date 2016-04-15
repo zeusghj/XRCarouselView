@@ -144,7 +144,7 @@ typedef enum {
 
 
 /**
- *  设置分页控件的图片
+ *  设置分页控件指示器的图片
  *  两个图片都不能为空，否则设置无效
  *  不设置则为系统默认
  *
@@ -153,6 +153,15 @@ typedef enum {
  */
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage;
 
+
+/**
+ *  设置分页控件指示器的颜色
+ *  不设置则为系统默认
+ *
+ *  @param color    其他页码的颜色
+ *  @param currentColor 当前页码的颜色
+ */
+- (void)setPageColor:(UIColor *)color andCurrentPageColor:(UIColor *)currentColor;
 
 /**
  *  清除沙盒中的图片缓存
