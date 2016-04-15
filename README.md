@@ -31,7 +31,7 @@ pod 'XRCarouselView'
 ######方式一：代码创建
 1.导入主头文件 XRCarouselView.h
 
-2.创建XRCarouselView，设置各属性
+2.创建XRCarouselView，设置所需属性
 
 3.将XRCarouselView添加到要展示到view上面
 ######方式二：直接添加到xib\sb
@@ -39,10 +39,15 @@ pod 'XRCarouselView'
 
 2.设置view的class为XRCarouselView
 
-3.拖线到.m文件中，设置各属性
+3.拖线到.m文件中，设置所需属性
 
+###说明
+要想正常使用，图片数组imageArray必须设置
 
-
+控件的frame必须设置，xib\sb创建的可不设置
+ 
+其他属性都有默认值，可不设置
+ 
 #XRCarouselView的常用属性方法
 
 1.imageArray：要轮播的图片数组，可传本地图片或网络图片路径

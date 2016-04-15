@@ -10,7 +10,22 @@
 
 typedef void(^ClickBlock)(NSInteger index);
 
+//pageControl的显示位置
+typedef enum {
+    PositionNone,           //默认值 == PositionBottomCenter
+    PositionHide,           //隐藏
+    PositionTopCenter,      //中上
+    PositionBottomLeft,     //左下
+    PositionBottomCenter,   //中下
+    PositionBottomRight     //右下
+} PageControlPosition;
+
+
+
+
+
 @protocol XRCarouselViewDelegate <NSObject>
+
 /**
  *  该方法用来处理图片的点击，会返回图片在数组中的索引
  *  代理与block二选一即可，若两者都实现，block的优先级高
@@ -23,7 +38,16 @@ typedef void(^ClickBlock)(NSInteger index);
 @end
 
 
+
+
+/**
+ *  说明：要想正常使用，图片数组imageArray必须设置
+ *  控件的frame必须设置，xib\sb创建的可不设置
+ *  其他属性都有默认值，可不设置
+ */
 @interface XRCarouselView : UIView
+
+
 /*
  这里没有提供修改占位图片的接口，如果需要修改，可直接到.m文件中
  修改占位图片名称为你想要显示图片的名称，或者将你想要显示图片的
@@ -31,29 +55,12 @@ typedef void(^ClickBlock)(NSInteger index);
  */
 
 
-/**
-*  注意：
-*  通过xib/sb创建时，获取到的尺寸是不准确的
-*  比如xib/sb宽度是320，运行在宽度375的设备上时，依旧只有320
-*  解决办法：通过代码重新设置frame即可
-*
-*/
-
-
-
 #pragma mark 属性
 
 /**
- *  分页控件，默认位置在底部中间
+ *  设置分页控件位置，默认为PositionBottomCenter
  */
-@property (nonatomic, strong) UIPageControl *pageControl;
-
-
-/**
- *  图片描述控件，默认在底部
- *  黑色透明背景，白色字体居中显示
- */
-@property (nonatomic, strong) UILabel *describeLabel;
+@property (nonatomic, assign) PageControlPosition pagePosition;
 
 
 /**
@@ -64,8 +71,26 @@ typedef void(^ClickBlock)(NSInteger index);
 
 /**
  *  图片描述的字符串数组，应与图片顺序对应
+ *
+ *  图片描述控件默认是隐藏的
+ *  设置该属性后，会取消隐藏，显示在图片底部
  */
 @property (nonatomic, strong) NSArray *describeArray;
+
+/**
+ *  图片描述控件的背景颜色，默认为黑色半透明
+ */
+@property (nonatomic, strong) UIColor *desLabelBgColor;
+
+/**
+ *  图片描述控件的字体，默认为13号字体
+ */
+@property (nonatomic, strong) UIFont *desLabelFont;
+
+/**
+ *  图片描述控件的文字颜色，默认为白色
+ */
+@property (nonatomic, strong) UIColor *desLabelColor;
 
 
 /**
@@ -94,15 +119,12 @@ typedef void(^ClickBlock)(NSInteger index);
  *
  *  @param imageArray 图片数组
  *  @param describeArray 图片描述数组
- *  @param imageClickBlock 处理图片点击的代码
  *
  */
-- (instancetype)initWithImageArray:(NSArray *)imageArray;
-+ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray;
+- (instancetype)initWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray;
++ (instancetype)carouselViewWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray;
 - (instancetype)initWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray;
-+ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray;;
-- (instancetype)initWithImageArray:(NSArray *)imageArray imageClickBlock:(ClickBlock)imageClickBlock;
-+ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray imageClickBlock:(ClickBlock)imageClickBlock;
++ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray;
 
 
 #pragma mark 方法

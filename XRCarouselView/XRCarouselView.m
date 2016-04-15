@@ -9,12 +9,15 @@
 
 
 #define DEFAULTTIME 5
+#define Margin 10
 
 typedef enum{
     DirecNone,
     DirecLeft,
     DirecRight
 } Direction;
+
+
 
 @interface XRCarouselView()<UIScrollViewDelegate>
 //轮播的图片数组
@@ -25,8 +28,10 @@ typedef enum{
 @property (nonatomic, strong) NSMutableDictionary *operationDic;
 //滚动方向
 @property (nonatomic, assign) Direction direction;
-//提示信息
-@property (nonatomic, strong) UILabel *promptLabel;
+//图片描述控件，默认在底部
+@property (nonatomic, strong) UILabel *describeLabel;
+//分页控件
+@property (nonatomic, strong) UIPageControl *pageControl;
 //显示的imageView
 @property (nonatomic, strong) UIImageView *currImageView;
 //辅助滚动的imageView
@@ -37,6 +42,8 @@ typedef enum{
 @property (nonatomic, assign) NSInteger nextIndex;
 //滚动视图
 @property (nonatomic, strong) UIScrollView *scrollView;
+//pageControl图片大小
+@property (nonatomic, assign) CGSize pageImageSize;
 //定时器
 @property (nonatomic, strong) NSTimer *timer;
 //任务队列
@@ -86,19 +93,6 @@ typedef enum{
     return _queue;
 }
 
-- (UILabel *)promptLabel {
-    if (!_promptLabel) {
-        _promptLabel = [[UILabel alloc] init];
-        _promptLabel.text = @"没有图片哦，赶快去设置吧！";
-        _promptLabel.font = [UIFont systemFontOfSize:20];
-        _promptLabel.textColor = [UIColor blueColor];
-        [_promptLabel sizeToFit];
-        [self addSubview:_promptLabel];
-    }
-    return _promptLabel;
-}
-
-
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
@@ -113,7 +107,6 @@ typedef enum{
         [_scrollView addSubview:_currImageView];
         _otherImageView = [[UIImageView alloc] init];
         [_scrollView addSubview:_otherImageView];
-        [self addSubview:_scrollView];
     }
     return _scrollView;
 }
@@ -126,7 +119,6 @@ typedef enum{
         _describeLabel.textAlignment = NSTextAlignmentCenter;
         _describeLabel.font = [UIFont systemFontOfSize:13];
         _describeLabel.hidden = YES;
-        [self addSubview:_describeLabel];
     }
     return _describeLabel;
 }
@@ -137,22 +129,25 @@ typedef enum{
         _pageControl = [[UIPageControl alloc] init];
         _pageControl.hidesForSinglePage = YES;
         _pageControl.userInteractionEnabled = NO;
-        [self addSubview:_pageControl];
     }
     return _pageControl;
 }
 
 #pragma mark- 构造方法
-- (instancetype)initWithImageArray:(NSArray *)imageArray {
-    return [self initWithImageArray:imageArray imageClickBlock:nil];
+- (instancetype)initWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray {
+    if (self = [super initWithFrame:frame]) {
+        self.imageArray = imageArray;
+    }
+    return self;
 }
 
-+ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray {
-    return [self carouselViewWithImageArray:imageArray imageClickBlock:nil];
++ (instancetype)carouselViewWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray {
+    return [[self alloc] initWithFrame:frame imageArray:imageArray];
 }
+
 
 - (instancetype)initWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray {
-    if (self = [self initWithImageArray:imageArray]) {
+    if (self = [self initWithFrame:CGRectZero imageArray:imageArray]) {
         self.describeArray = describeArray;
     }
     return self;
@@ -162,27 +157,14 @@ typedef enum{
     return [[self alloc] initWithImageArray:imageArray describeArray:describeArray];
 }
 
-- (instancetype)initWithImageArray:(NSArray *)imageArray imageClickBlock:(ClickBlock)imageClickBlock {
-    if (self = [super init]) {
-        self.imageArray = imageArray;
-        self.imageClickBlock = imageClickBlock;
-    }
-    return self;
-}
-
-+ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray imageClickBlock:(ClickBlock)imageClickBlock {
-    return [[self alloc] initWithImageArray:imageArray imageClickBlock:imageClickBlock];
-}
 
 #pragma mark- --------设置相关方法--------
-#pragma mark 设置控件的frame
+#pragma mark 设置控件的frame，并添加子控件
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    self.scrollView.frame = self.bounds;
-    self.describeLabel.frame = CGRectMake(0, self.height - 20, self.width, 20);
-    self.pageControl.center = CGPointMake(self.width * 0.5, self.height - 10);
-    self.promptLabel.center = CGPointMake(self.width * 0.5, self.height * 0.5);
-    [self setScrollViewContentSize];
+    [self addSubview:self.scrollView];
+    [self addSubview:self.describeLabel];
+    [self addSubview:self.pageControl];
 }
 
 #pragma mark 设置滚动方向
@@ -204,7 +186,6 @@ typedef enum{
 #pragma mark 设置图片数组
 - (void)setImageArray:(NSArray *)imageArray{
     if (!imageArray.count) return;
-    self.promptLabel.hidden = YES;
     _imageArray = imageArray;
     _images = [NSMutableArray array];
     for (int i = 0; i < imageArray.count; i++) {
@@ -217,7 +198,6 @@ typedef enum{
     }
     self.currImageView.image = _images.firstObject;
     self.pageControl.numberOfPages = _images.count;
-    [self setScrollViewContentSize];
 }
 
 
@@ -252,11 +232,59 @@ typedef enum{
     }
 }
 
+#pragma mark 设置图片描述控件
+//设置背景颜色
+- (void)setDesLabelBgColor:(UIColor *)desLabelBgColor {
+    _desLabelBgColor = desLabelBgColor;
+    self.describeLabel.backgroundColor = desLabelBgColor;
+}
+
+//设置字体
+- (void)setDesLabelFont:(UIFont *)desLabelFont {
+    _desLabelFont = desLabelFont;
+    self.describeLabel.font = desLabelFont;
+}
+
+//设置文字颜色
+- (void)setDesLabelColor:(UIColor *)desLabelColor {
+    _desLabelColor = desLabelColor;
+    self.describeLabel.textColor = desLabelColor;
+}
+
+
 #pragma mark 设置pageControl的图片
 - (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
     if (!pageImage || !currentImage) return;
+    self.pageImageSize = pageImage.size;
     [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
     [self.pageControl setValue:pageImage forKey:@"_pageImage"];
+}
+
+#pragma mark 设置pageControl的位置
+- (void)setPageControlPosition {
+    if (_pagePosition == PositionHide) {
+        _pageControl.hidden = YES;
+        return;
+    }
+    
+    CGSize size;
+    if (_pageImageSize.width == 0) {//没有设置图片
+        size = [_pageControl sizeForNumberOfPages:_pageControl.numberOfPages];
+        size.height = 20;
+    } else {//设置图片了
+        size = CGSizeMake(_pageImageSize.width * (_pageControl.numberOfPages * 2 - 1), _pageImageSize.height);
+    }
+    
+    _pageControl.frame = CGRectMake(0, 0, size.width, size.height);
+    
+    if (_pagePosition == PositionNone || _pagePosition == PositionBottomCenter)
+        _pageControl.center = CGPointMake(self.width * 0.5, self.height - (_describeLabel.hidden? 10 : 30));
+    else if (_pagePosition == PositionTopCenter)
+        _pageControl.center = CGPointMake(self.width * 0.5, size.height * 0.5);
+    else if (_pagePosition == PositionBottomLeft)
+        _pageControl.frame = CGRectMake(Margin, self.height - (_describeLabel.hidden? size.height : size.height + 20), size.width, size.height);
+    else
+        _pageControl.frame = CGRectMake(self.width - Margin - size.width, self.height - (_describeLabel.hidden? size.height : size.height + 20), size.width, size.height);
 }
 
 #pragma mark 设置定时器时间
@@ -289,7 +317,12 @@ typedef enum{
 - (void)layoutSubviews {
     [super layoutSubviews];
     //有导航控制器时，会默认在scrollview上方添加64的内边距，这里强制设置为0
-    self.scrollView.contentInset = UIEdgeInsetsZero;
+    _scrollView.contentInset = UIEdgeInsetsZero;
+    
+    _scrollView.frame = self.bounds;
+    _describeLabel.frame = CGRectMake(0, self.height - 20, self.width, 20);
+    [self setPageControlPosition];
+    [self setScrollViewContentSize];
 }
 
 
