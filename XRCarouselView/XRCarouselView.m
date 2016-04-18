@@ -22,10 +22,6 @@ typedef enum{
 @interface XRCarouselView()<UIScrollViewDelegate>
 //轮播的图片数组
 @property (nonatomic, strong) NSMutableArray *images;
-//下载的图片字典
-@property (nonatomic, strong) NSMutableDictionary *imageDic;
-//下载图片的操作
-@property (nonatomic, strong) NSMutableDictionary *operationDic;
 //滚动方向
 @property (nonatomic, assign) Direction direction;
 //图片描述控件，默认在底部
@@ -72,20 +68,6 @@ typedef enum{
 }
 
 #pragma mark- 懒加载
-- (NSMutableDictionary *)imageDic{
-    if (!_imageDic) {
-        _imageDic = [NSMutableDictionary dictionary];
-    }
-    return _imageDic;
-}
-
-- (NSMutableDictionary *)operationDic{
-    if (!_operationDic) {
-        _operationDic = [NSMutableDictionary dictionary];
-    }
-    return  _operationDic;
-}
-
 - (NSOperationQueue *)queue {
     if (!_queue) {
         _queue = [[NSOperationQueue alloc] init];
@@ -167,22 +149,6 @@ typedef enum{
     [self addSubview:self.pageControl];
 }
 
-#pragma mark 设置滚动方向
-- (void)setDirection:(Direction)direction {
-    if (_direction == direction) return;
-    _direction = direction;
-    if (direction == DirecNone) return;
-    if (direction == DirecRight) {
-        self.otherImageView.frame = CGRectMake(0, 0, self.width, self.height);
-        self.nextIndex = self.currIndex - 1;
-        if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
-    } else if (direction == DirecLeft){
-        self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
-        self.nextIndex = (self.currIndex + 1) % _images.count;
-    }
-    self.otherImageView.image = self.images[self.nextIndex];
-}
-
 #pragma mark 设置图片数组
 - (void)setImageArray:(NSArray *)imageArray{
     if (!imageArray.count) return;
@@ -221,9 +187,9 @@ typedef enum{
 #pragma mark 设置scrollView的contentSize
 - (void)setScrollViewContentSize {
     if (_images.count > 1) {
-        self.scrollView.contentSize = CGSizeMake(self.width * 3, 0);
-        self.scrollView.contentOffset = CGPointMake(self.width, 0);
-        self.currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
+        self.scrollView.contentSize = CGSizeMake(self.width * 5, 0);
+        self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
+        self.currImageView.frame = CGRectMake(self.width * 2, 0, self.width, self.height);
         [self startTimer];
     } else {
         self.scrollView.contentSize = CGSizeZero;
@@ -316,7 +282,7 @@ typedef enum{
 }
 
 - (void)nextPage {
-    [self.scrollView setContentOffset:CGPointMake(self.width * 2, 0) animated:YES];
+    [self.scrollView setContentOffset:CGPointMake(self.width * 3, 0) animated:YES];
 }
 
 #pragma mark- -----------其它-----------
@@ -345,45 +311,27 @@ typedef enum{
 #pragma mark 下载网络图片
 - (void)downloadImages:(int)index {
     NSString *key = _imageArray[index];
-    //从内存缓存中取图片
-    UIImage *image = [self.imageDic objectForKey:key];
-    if (image) {
-        _images[index] = image;
-        return;
-    }
-    //从沙盒缓存中取图片
-    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
-    NSString *path = [cache stringByAppendingPathComponent:[key lastPathComponent]];
+    //从沙盒中取图片
+    NSString *path = [[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"] stringByAppendingPathComponent:[key lastPathComponent]];
     NSData *data = [NSData dataWithContentsOfFile:path];
     if (data) {
-        image = [UIImage imageWithData:data];
-        _images[index] = image;
-        [self.imageDic setObject:image forKey:key];
+        _images[index] = [UIImage imageWithData:data];
         return;
     }
     //下载图片
-    NSBlockOperation *download = [self.operationDic objectForKey:key];
-    if (download) return;
-    //创建一个操作
-    download = [NSBlockOperation blockOperationWithBlock:^{
-        NSURL *url = [NSURL URLWithString:key];
-        NSData *data = [NSData dataWithContentsOfURL:url];
+    NSBlockOperation *download = [NSBlockOperation blockOperationWithBlock:^{
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:key]];
         if (!data) return;
         UIImage *image = [UIImage imageWithData:data];
         //取到的data有可能不是图片
         if (image) {
-            [self.imageDic setObject:image forKey:key];
             self.images[index] = image;
             //如果下载的图片为当前要显示的图片，直接到主线程给imageView赋值，否则要等到下一轮才会显示
             if (_currIndex == index) [_currImageView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
             [data writeToFile:path atomically:YES];
         }
-        [self.operationDic removeObjectForKey:key];
-        
     }];
     [self.queue addOperation:download];
-    [self.operationDic setObject:download forKey:key];
-    
 }
 
 #pragma mark 清除沙盒中的图片缓存
@@ -397,11 +345,11 @@ typedef enum{
 
 #pragma mark 当图片滚动过半时就修改当前页码
 - (void)changeCurrentPageWithOffset:(CGFloat)offsetX {
-    if (offsetX < self.width * 0.5) {
+    if (offsetX < self.width * 1.5) {
         NSInteger index = self.currIndex - 1;
         if (index < 0) index = self.images.count - 1;
         _pageControl.currentPage = index;
-    } else if (offsetX > self.width * 1.5){
+    } else if (offsetX > self.width * 2.5){
         _pageControl.currentPage = (self.currIndex + 1) % self.images.count;
     } else {
         _pageControl.currentPage = self.currIndex;
@@ -411,8 +359,33 @@ typedef enum{
 #pragma mark- --------UIScrollViewDelegate--------
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offsetX = scrollView.contentOffset.x;
-    self.direction = offsetX > self.width? DirecLeft : offsetX < self.width? DirecRight : DirecNone;
     [self changeCurrentPageWithOffset:offsetX];
+    
+    self.direction = offsetX > self.width * 2? DirecLeft : offsetX < self.width * 2? DirecRight : DirecNone;
+    
+    if (self.direction == DirecRight) {
+        self.otherImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
+        self.nextIndex = self.currIndex - 1;
+        if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
+        if (self.scrollView.contentOffset.x <= self.width) {
+            [self changeToNext];
+        }
+    } else if (self.direction == DirecLeft){
+        self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
+        self.nextIndex = (self.currIndex + 1) % _images.count;
+        if (self.scrollView.contentOffset.x >= self.width * 3) {
+            [self changeToNext];
+        }
+    }
+    self.otherImageView.image = self.images[self.nextIndex];
+}
+
+- (void)changeToNext {
+    self.currImageView.image = self.otherImageView.image;
+    self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
+    self.currIndex = self.nextIndex;
+    self.pageControl.currentPage = self.currIndex;
+    self.describeLabel.text = self.describeArray[self.currIndex];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -421,25 +394,6 @@ typedef enum{
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     [self startTimer];
-}
-
-- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-    [self pauseScroll];
-}
-
-- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-    [self pauseScroll];
-}
-
-- (void)pauseScroll {
-    //等于1表示没滚动
-    if (self.scrollView.contentOffset.x / self.width == 1) return;
-    self.currIndex = self.nextIndex;
-    self.pageControl.currentPage = self.currIndex;
-    self.currImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
-    self.describeLabel.text = self.describeArray[self.currIndex];
-    self.currImageView.image = self.otherImageView.image;
-    self.scrollView.contentOffset = CGPointMake(self.width, 0);
 }
 
 @end

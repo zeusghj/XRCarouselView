@@ -69,7 +69,7 @@
     /**
      *  通过storyboard创建的轮播控件
      */
-    _carouselView1.imageArray = arr3;
+    _carouselView1.imageArray = arr2;
     //设置分页控件指示器的颜色
     [_carouselView1 setPageColor:[UIColor redColor] andCurrentPageColor:[UIColor blueColor]];
     _carouselView1.time = 2;
