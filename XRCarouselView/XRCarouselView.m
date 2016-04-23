@@ -170,6 +170,10 @@ typedef enum{
 #pragma mark 设置描述数组
 - (void)setDescribeArray:(NSArray *)describeArray{
     _describeArray = describeArray;
+    if (describeArray == nil) {
+        self.describeLabel.hidden = YES;
+        return;
+    }
     //如果描述的个数与图片个数不一致，则补空字符串
     if (describeArray && describeArray.count > 0) {
         if (describeArray.count < _images.count) {

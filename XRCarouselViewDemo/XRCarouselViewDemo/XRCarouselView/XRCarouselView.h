@@ -73,7 +73,8 @@ typedef enum {
  *  图片描述的字符串数组，应与图片顺序对应
  *
  *  图片描述控件默认是隐藏的
- *  设置该属性后，会取消隐藏，显示在图片底部
+ *  设置图片描述后，会取消隐藏，显示在图片底部
+ *  若之后又需要隐藏，只需将该属性设为nil即可
  */
 @property (nonatomic, strong) NSArray *describeArray;
 
