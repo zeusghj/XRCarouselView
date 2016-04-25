@@ -164,6 +164,7 @@ typedef enum{
     }
     self.currImageView.image = _images.firstObject;
     self.pageControl.numberOfPages = _images.count;
+    [self layoutSubviews];
 }
 
 
