@@ -75,6 +75,9 @@
     _carouselView1.time = 2;
 }
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    _carouselView.imageArray = @[@"http://www.5068.com/u/faceimg/20140725173411.jpg", @"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg", @"http://file27.mafengwo.net/M00/B2/12/wKgB6lO0ahWAMhL8AAV1yBFJDJw20.jpeg"];
+}
 
 #pragma mark XRCarouselViewDelegate
 - (void)carouselView:(XRCarouselView *)carouselView didClickImage:(NSInteger)index {

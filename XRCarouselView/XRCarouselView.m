@@ -162,7 +162,11 @@ typedef enum{
             [self downloadImages:i];
         }
     }
+    
+    //防止在滚动过程中重新给imageArray赋值时报错
+    if (_currIndex >= _images.count) _currIndex = _images.count - 1;
     self.currImageView.image = _images[_currIndex];
+    self.describeLabel.text = _describeArray[_currIndex];
     self.pageControl.numberOfPages = _images.count;
     [self layoutSubviews];
 }
