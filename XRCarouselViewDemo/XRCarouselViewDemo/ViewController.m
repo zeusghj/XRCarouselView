@@ -20,32 +20,33 @@
     //本地图片
     NSArray *arr1 = @[[UIImage imageNamed:@"1.jpg"], [UIImage imageNamed:@"2.jpg"], [UIImage imageNamed:@"3.jpg"]];
     //网络图片
-    NSArray *arr2 = @[@"http://www.5068.com/u/faceimg/20140725173411.jpg", @"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg", @"http://file27.mafengwo.net/M00/B2/12/wKgB6lO0ahWAMhL8AAV1yBFJDJw20.jpeg"];
+    NSArray *arr2 = @[@"http://hiphotos.baidu.com/praisejesus/pic/item/e8df7df89fac869eb68f316d.jpg", @"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg", @"http://file27.mafengwo.net/M00/B2/12/wKgB6lO0ahWAMhL8AAV1yBFJDJw20.jpeg"];
     
     //既有本地图片也有网络图片
-    NSArray *arr3 = @[@"http://www.5068.com/u/faceimg/20140725173411.jpg", [UIImage imageNamed:@"2.jpg"], @"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg", [UIImage imageNamed:@"1.jpg"]];
+    NSArray *arr3 = @[@"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg", [UIImage imageNamed:@"2.jpg"], @"http://hiphotos.baidu.com/praisejesus/pic/item/e8df7df89fac869eb68f316d.jpg", [UIImage imageNamed:@"1.jpg"]];
     
     NSArray *describeArray = @[@"这是第一张图片的描述", @"这是第二张图片的描述", @"这是第三张图片的描述", @"这是第四张图片的描述"];
-
+    
     /**
      *  通过代码创建
      */
     self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3 describeArray:describeArray];
     
+    
     //设置frame
     self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
     
     //用block处理图片点击
-//    self.carouselView.imageClickBlock = ^(NSInteger index) {
-//        NSLog(@"第%ld张图片被点击", index);
-//    };
+    //    self.carouselView.imageClickBlock = ^(NSInteger index) {
+    //        NSLog(@"第%ld张图片被点击", index);
+    //    };
     
     //用代理处理图片点击，如果两个都实现，block优先级高于代理
     self.carouselView.delegate = self;
     
     
     //设置每张图片的停留时间
-    _carouselView.time = 1;
+    _carouselView.time = 2;
     
     //设置分页控件的图片,不设置则为系统默认
     [_carouselView setPageImage:[UIImage imageNamed:@"other"] andCurrentImage:[UIImage imageNamed:@"current"]];
@@ -71,13 +72,12 @@
      */
     _carouselView1.imageArray = arr2;
     //设置分页控件指示器的颜色
-    [_carouselView1 setPageColor:[UIColor redColor] andCurrentPageColor:[UIColor blueColor]];
+    [_carouselView1 setPageColor:[UIColor blueColor] andCurrentPageColor:[UIColor redColor]];
+    //设置图片切换的方式
+    _carouselView1.changeMode = ChangeModeFade;
     _carouselView1.time = 2;
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    _carouselView.imageArray = @[@"http://www.5068.com/u/faceimg/20140725173411.jpg", @"http://file27.mafengwo.net/M00/52/F2/wKgB6lO_PTyAKKPBACID2dURuk410.jpeg", @"http://file27.mafengwo.net/M00/B2/12/wKgB6lO0ahWAMhL8AAV1yBFJDJw20.jpeg"];
-}
 
 #pragma mark XRCarouselViewDelegate
 - (void)carouselView:(XRCarouselView *)carouselView didClickImage:(NSInteger)index {

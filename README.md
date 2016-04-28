@@ -52,14 +52,19 @@ pod 'XRCarouselView'
 
 1.imageArray：要轮播的图片数组，可传本地图片或网络图片路径
 
-2.describeArray：图片描述的字符串数组，应与图片顺序对应
+2.changeMode：图片切换方式，有轮播滚动与淡入淡出两种
 
-3.time：设置每页的停留时间
+3.describeArray：图片描述的字符串数组，应与图片顺序对应
 
-4.void(^imageClickBlock)(NSInteger index)：图片被点击后要执行的代码
+4.time：设置每页的停留时间
 
-5.clearDiskCache：清除沙盒中的图片缓存
+5.void(^imageClickBlock)(NSInteger index)：图片被点击后要执行的代码
+
+6.clearDiskCache：清除沙盒中的图片缓存
 
 #效果演示
+######轮播滚动
 ![](http://ww1.sinaimg.cn/large/b68232a1gw1f2g66tc8vkg20ad05b7tf.gif)
+######淡入淡出
+![](http://ww1.sinaimg.cn/large/b68232a1gw1f3ch9wz6vxg20a904y1kx.gif)
     

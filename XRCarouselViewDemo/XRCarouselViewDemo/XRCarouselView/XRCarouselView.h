@@ -20,6 +20,11 @@ typedef enum {
     PositionBottomRight     //右下
 } PageControlPosition;
 
+//图片切换的方式
+typedef enum {
+    ChangeModeDefault,  //轮播滚动
+    ChangeModeFade      //淡入淡出
+} ChangeMode;
 
 
 
@@ -56,6 +61,13 @@ typedef enum {
 
 
 #pragma mark 属性
+
+
+/**
+ *  设置图片切换的模式，默认为ChangeModeDefault
+ */
+@property (nonatomic, assign) ChangeMode changeMode;
+
 
 /**
  *  设置分页控件位置，默认为PositionBottomCenter

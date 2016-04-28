@@ -189,6 +189,13 @@
         self.scrollView.contentSize = CGSizeMake(self.width * 5, 0);
         self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
         self.currImageView.frame = CGRectMake(self.width * 2, 0, self.width, self.height);
+        if (_changeMode == ChangeModeFade) {
+            _currImageView.frame = CGRectMake(0, 0, self.width, self.height);
+            _otherImageView.frame = self.currImageView.frame;
+            [self insertSubview:self.currImageView atIndex:0];
+            [self insertSubview:self.otherImageView atIndex:1];
+            [_scrollView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageClick)]];
+        }
         [self startTimer];
     } else {
         self.scrollView.contentSize = CGSizeZero;
@@ -360,14 +367,20 @@
     CGFloat offsetX = scrollView.contentOffset.x;
     [self changeCurrentPageWithOffset:offsetX];
     if (offsetX < self.width * 2) {//right
-        self.otherImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
+        if (_changeMode == ChangeModeFade) {
+            self.currImageView.alpha = offsetX / self.width - 1;
+            self.otherImageView.alpha = 2 - offsetX / self.width;
+        } else self.otherImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
         self.nextIndex = self.currIndex - 1;
         if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
         if (offsetX <= self.width) {
             [self changeToNext];
         }
     } else if (offsetX > self.width * 2){//left
-        self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
+        if (_changeMode == ChangeModeFade) {
+            self.otherImageView.alpha = offsetX / self.width - 2;
+            self.currImageView.alpha = 3 - offsetX / self.width;
+        } else self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
         self.nextIndex = (self.currIndex + 1) % _images.count;
         if (offsetX >= self.width * 3) {
             [self changeToNext];
@@ -377,6 +390,10 @@
 }
 
 - (void)changeToNext {
+    if (_changeMode == ChangeModeFade) {
+        self.currImageView.alpha = 1;
+        self.otherImageView.alpha = 0;
+    }
     self.currImageView.image = self.otherImageView.image;
     self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
     self.currIndex = self.nextIndex;
