@@ -363,13 +363,13 @@
         self.otherImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
         self.nextIndex = self.currIndex - 1;
         if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
-        if (self.scrollView.contentOffset.x <= self.width) {
+        if (offsetX <= self.width) {
             [self changeToNext];
         }
     } else if (offsetX > self.width * 2){//left
         self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
         self.nextIndex = (self.currIndex + 1) % _images.count;
-        if (self.scrollView.contentOffset.x >= self.width * 3) {
+        if (offsetX >= self.width * 3) {
             [self changeToNext];
         }
     }
