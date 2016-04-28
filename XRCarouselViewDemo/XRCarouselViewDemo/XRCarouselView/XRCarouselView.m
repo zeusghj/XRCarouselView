@@ -11,19 +11,9 @@
 #define DEFAULTTIME 5
 #define Margin 10
 
-typedef enum{
-    DirecNone,
-    DirecLeft,
-    DirecRight
-} Direction;
-
-
-
 @interface XRCarouselView()<UIScrollViewDelegate>
 //轮播的图片数组
 @property (nonatomic, strong) NSMutableArray *images;
-//滚动方向
-@property (nonatomic, assign) Direction direction;
 //图片描述控件，默认在底部
 @property (nonatomic, strong) UILabel *describeLabel;
 //分页控件
@@ -369,17 +359,14 @@ typedef enum{
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGFloat offsetX = scrollView.contentOffset.x;
     [self changeCurrentPageWithOffset:offsetX];
-    
-    self.direction = offsetX > self.width * 2? DirecLeft : offsetX < self.width * 2? DirecRight : DirecNone;
-    
-    if (self.direction == DirecRight) {
+    if (offsetX < self.width * 2) {//right
         self.otherImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
         self.nextIndex = self.currIndex - 1;
         if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
         if (self.scrollView.contentOffset.x <= self.width) {
             [self changeToNext];
         }
-    } else if (self.direction == DirecLeft){
+    } else if (offsetX > self.width * 2){//left
         self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
         self.nextIndex = (self.currIndex + 1) % _images.count;
         if (self.scrollView.contentOffset.x >= self.width * 3) {
