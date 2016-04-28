@@ -73,9 +73,8 @@
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.delegate = self;
+        [_scrollView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageClick)]];
         _currImageView = [[UIImageView alloc] init];
-        _currImageView.userInteractionEnabled = YES;
-        [_currImageView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageClick)]];
         [_scrollView addSubview:_currImageView];
         _otherImageView = [[UIImageView alloc] init];
         [_scrollView addSubview:_otherImageView];
@@ -192,9 +191,9 @@
         if (_changeMode == ChangeModeFade) {
             _currImageView.frame = CGRectMake(0, 0, self.width, self.height);
             _otherImageView.frame = self.currImageView.frame;
+            _otherImageView.alpha = 0;
             [self insertSubview:self.currImageView atIndex:0];
             [self insertSubview:self.otherImageView atIndex:1];
-            [_scrollView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageClick)]];
         }
         [self startTimer];
     } else {
@@ -288,8 +287,20 @@
 }
 
 - (void)nextPage {
-    [self.scrollView setContentOffset:CGPointMake(self.width * 3, 0) animated:YES];
+    if (_changeMode == ChangeModeFade) {
+        self.nextIndex = (self.currIndex + 1) % _images.count;
+        self.otherImageView.image = _images[_nextIndex];
+        [UIView animateWithDuration:1.2 animations:^{
+            self.currImageView.alpha = 0;
+            self.otherImageView.alpha = 1;
+            self.pageControl.currentPage = _nextIndex;
+        } completion:^(BOOL finished) {
+            [self changeToNext];
+        }];
+        
+    } else [self.scrollView setContentOffset:CGPointMake(self.width * 3, 0) animated:YES];
 }
+
 
 #pragma mark- -----------其它-----------
 #pragma mark 布局子控件

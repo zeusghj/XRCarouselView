@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "XRCarouselView.h"
+#import <objc/runtime.h>
 @interface ViewController ()<XRCarouselViewDelegate>
 @property (nonatomic, strong) XRCarouselView *carouselView;
 @property (weak, nonatomic) IBOutlet XRCarouselView *carouselView1;
@@ -75,7 +76,12 @@
     [_carouselView1 setPageColor:[UIColor blueColor] andCurrentPageColor:[UIColor redColor]];
     //设置图片切换的方式
     _carouselView1.changeMode = ChangeModeFade;
-    _carouselView1.time = 2;
+    _carouselView1.imageClickBlock = ^(NSInteger index){
+        NSLog(@"点击了第%ld张图片", index);
+    };
+    _carouselView1.time = 3;
+    
+    
 }
 
 

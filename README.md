@@ -66,5 +66,5 @@ pod 'XRCarouselView'
 ######轮播滚动
 ![](http://ww4.sinaimg.cn/large/b68232a1gw1f3chvy198zg20a904y7q5.gif)
 ######淡入淡出
-![](http://ww3.sinaimg.cn/large/b68232a1gw1f3chspe1jsg20a904ye81.gif)
+![](http://ww2.sinaimg.cn/large/b68232a1gw1f3ck6l40yqg20a904yu0x.gif)
     
