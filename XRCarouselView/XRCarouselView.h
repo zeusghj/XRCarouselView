@@ -135,8 +135,6 @@ typedef enum {
  *
  */
 - (instancetype)initWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray;
-+ (instancetype)carouselViewWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray;
-- (instancetype)initWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray;
 + (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray;
 
 
@@ -164,7 +162,7 @@ typedef enum {
  *  @param pageImage    其他页码的图片
  *  @param currentImage 当前页码的图片
  */
-- (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage;
+- (void)setPageImage:(UIImage *)image andCurrentPageImage:(UIImage *)currentImage;
 
 
 /**

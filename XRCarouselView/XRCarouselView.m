@@ -112,20 +112,11 @@
     return self;
 }
 
-+ (instancetype)carouselViewWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray {
-    return [[self alloc] initWithFrame:frame imageArray:imageArray];
-}
-
-
-- (instancetype)initWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray {
-    if (self = [self initWithFrame:CGRectZero imageArray:imageArray]) {
-        self.describeArray = describeArray;
-    }
-    return self;
-}
-
 + (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray {
-    return [[self alloc] initWithImageArray:imageArray describeArray:describeArray];
+    XRCarouselView *carouselView = [[self alloc] init];
+    carouselView.imageArray = imageArray;
+    carouselView.describeArray = describeArray;
+    return carouselView;
 }
 
 
@@ -224,11 +215,11 @@
 
 
 #pragma mark 设置pageControl的指示器图片
-- (void)setPageImage:(UIImage *)pageImage andCurrentImage:(UIImage *)currentImage {
-    if (!pageImage || !currentImage) return;
-    self.pageImageSize = pageImage.size;
+- (void)setPageImage:(UIImage *)image andCurrentPageImage:(UIImage *)currentImage {
+    if (!image || !currentImage) return;
+    self.pageImageSize = image.size;
     [self.pageControl setValue:currentImage forKey:@"_currentPageImage"];
-    [self.pageControl setValue:pageImage forKey:@"_pageImage"];
+    [self.pageControl setValue:image forKey:@"_pageImage"];
 }
 
 #pragma mark 设置pageControl的指示器颜色
