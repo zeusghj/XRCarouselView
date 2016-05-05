@@ -195,22 +195,10 @@
 }
 
 #pragma mark 设置图片描述控件
-//设置背景颜色
-- (void)setDesLabelBgColor:(UIColor *)desLabelBgColor {
-    _desLabelBgColor = desLabelBgColor;
-    self.describeLabel.backgroundColor = desLabelBgColor;
-}
-
-//设置字体
-- (void)setDesLabelFont:(UIFont *)desLabelFont {
-    _desLabelFont = desLabelFont;
-    self.describeLabel.font = desLabelFont;
-}
-
-//设置文字颜色
-- (void)setDesLabelColor:(UIColor *)desLabelColor {
-    _desLabelColor = desLabelColor;
-    self.describeLabel.textColor = desLabelColor;
+- (void)setDescribeTextColor:(UIColor *)color font:(UIFont *)font bgColor:(UIColor *)bgColor {
+    if (color) self.describeLabel.textColor = color;
+    if (font) self.describeLabel.font = font;
+    if (bgColor) self.describeLabel.backgroundColor = bgColor;
 }
 
 
@@ -225,7 +213,6 @@
 #pragma mark 设置pageControl的指示器颜色
 - (void)setPageColor:(UIColor *)color andCurrentPageColor:(UIColor *)currentColor {
     _pageControl.pageIndicatorTintColor = color;
-    //  设置当前页码指示器的颜色
     _pageControl.currentPageIndicatorTintColor = currentColor;
 }
 
@@ -288,7 +275,6 @@
         } completion:^(BOOL finished) {
             [self changeToNext];
         }];
-        
     } else [self.scrollView setContentOffset:CGPointMake(self.width * 3, 0) animated:YES];
 }
 

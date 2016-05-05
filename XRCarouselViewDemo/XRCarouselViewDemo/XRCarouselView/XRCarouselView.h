@@ -85,25 +85,10 @@ typedef enum {
  *  图片描述的字符串数组，应与图片顺序对应
  *
  *  图片描述控件默认是隐藏的
- *  设置图片描述后，会取消隐藏，显示在图片底部
+ *  设置该属性后，控件会自动显示
  *  若之后又需要隐藏，只需将该属性设为nil即可
  */
 @property (nonatomic, strong) NSArray *describeArray;
-
-/**
- *  图片描述控件的背景颜色，默认为黑色半透明
- */
-@property (nonatomic, strong) UIColor *desLabelBgColor;
-
-/**
- *  图片描述控件的字体，默认为13号字体
- */
-@property (nonatomic, strong) UIFont *desLabelFont;
-
-/**
- *  图片描述控件的文字颜色，默认为白色
- */
-@property (nonatomic, strong) UIColor *desLabelColor;
 
 
 /**
@@ -156,7 +141,7 @@ typedef enum {
 
 /**
  *  设置分页控件指示器的图片
- *  两个图片都不能为空，否则设置无效
+ *  两个图片必须同时设置，否则设置无效
  *  不设置则为系统默认
  *
  *  @param pageImage    其他页码的图片
@@ -173,6 +158,17 @@ typedef enum {
  *  @param currentColor 当前页码的颜色
  */
 - (void)setPageColor:(UIColor *)color andCurrentPageColor:(UIColor *)currentColor;
+
+
+/**
+ *  修改图片描述控件的部分属性，不需要修改的传nil
+ *
+ *  @param color   字体颜色，默认为[UIColor whiteColor]
+ *  @param font    字体，默认为[UIFont systemFontOfSize:13]
+ *  @param bgColor 背景颜色，默认为[UIColor colorWithWhite:0 alpha:0.5]
+ */
+- (void)setDescribeTextColor:(UIColor *)color font:(UIFont *)font bgColor:(UIColor *)bgColor;
+
 
 /**
  *  清除沙盒中的图片缓存

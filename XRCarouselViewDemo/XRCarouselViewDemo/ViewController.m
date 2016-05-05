@@ -37,12 +37,8 @@
     //设置frame
     self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
     
-    //用block处理图片点击
-    //    self.carouselView.imageClickBlock = ^(NSInteger index) {
-    //        NSLog(@"第%ld张图片被点击", index);
-    //    };
     
-    //用代理处理图片点击，如果两个都实现，block优先级高于代理
+    //用代理处理图片点击
     self.carouselView.delegate = self;
     
     
@@ -55,15 +51,19 @@
     //设置分页控件的位置，默认为PositionBottomCenter
     _carouselView.pagePosition = PositionBottomRight;
     
+
     /**
-     *  设置图片描述控件
+     *  修改图片描述控件的外观，不需要修改的传nil
+     *
+     *  参数一 字体颜色，默认为白色
+     *  参数二 字体，默认为13号字体
+     *  参数三 背景颜色，默认为黑色半透明
      */
-    //设置背景颜色，默认为黑色半透明
-    _carouselView.desLabelBgColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
-    //设置字体，默认为13号字体
-    _carouselView.desLabelFont = [UIFont systemFontOfSize:15];
-    //设置文字颜色，默认为白色
-    _carouselView.desLabelColor = [UIColor greenColor];
+    UIColor *bgColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
+    UIFont *font = [UIFont systemFontOfSize:15];
+    UIColor *textColor = [UIColor greenColor];
+    [_carouselView setDescribeTextColor:textColor font:font bgColor:bgColor];
+    
     
     [self.view addSubview:_carouselView];
     
@@ -76,6 +76,7 @@
     [_carouselView1 setPageColor:[UIColor blueColor] andCurrentPageColor:[UIColor redColor]];
     //设置图片切换的方式
     _carouselView1.changeMode = ChangeModeFade;
+    //用block处理图片点击事件
     _carouselView1.imageClickBlock = ^(NSInteger index){
         NSLog(@"点击了第%ld张图片", index);
     };
