@@ -8,7 +8,6 @@
 
 #import "ViewController.h"
 #import "XRCarouselView.h"
-#import <objc/runtime.h>
 @interface ViewController ()<XRCarouselViewDelegate>
 @property (nonatomic, strong) XRCarouselView *carouselView;
 @property (weak, nonatomic) IBOutlet XRCarouselView *carouselView1;
@@ -18,21 +17,23 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.title = @"轮播Demo";
+    
+    
     //本地图片
     NSArray *arr1 = @[[UIImage imageNamed:@"1.jpg"], [UIImage imageNamed:@"2.jpg"], [UIImage imageNamed:@"3.jpg"]];
+    
     //网络图片
     NSArray *arr2 = @[@"http://hiphotos.baidu.com/praisejesus/pic/item/e8df7df89fac869eb68f316d.jpg", @"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg", @"http://file27.mafengwo.net/M00/B2/12/wKgB6lO0ahWAMhL8AAV1yBFJDJw20.jpeg"];
-    
     //既有本地图片也有网络图片
     NSArray *arr3 = @[@"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg", [UIImage imageNamed:@"2.jpg"], @"http://hiphotos.baidu.com/praisejesus/pic/item/e8df7df89fac869eb68f316d.jpg", [UIImage imageNamed:@"1.jpg"]];
-    
     NSArray *describeArray = @[@"这是第一张图片的描述", @"这是第二张图片的描述", @"这是第三张图片的描述", @"这是第四张图片的描述"];
     
     /**
      *  通过代码创建
      */
     self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3 describeArray:describeArray];
-    
     
     //设置frame
     self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
@@ -42,7 +43,7 @@
     self.carouselView.delegate = self;
     
     
-    //设置每张图片的停留时间
+    //设置每张图片的停留时间，默认值为5s，最少为2s
     _carouselView.time = 2;
     
     //设置分页控件的图片,不设置则为系统默认
@@ -81,13 +82,11 @@
         NSLog(@"点击了第%ld张图片", index);
     };
     _carouselView1.time = 3;
-    
-    
 }
 
 
 #pragma mark XRCarouselViewDelegate
-- (void)carouselView:(XRCarouselView *)carouselView didClickImage:(NSInteger)index {
+- (void)carouselView:(XRCarouselView *)carouselView clickImageAtIndex:(NSInteger)index {
     NSLog(@"点击了第%ld张图片", index);
 }
 

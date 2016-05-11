@@ -9,25 +9,26 @@
 
 
 #define DEFAULTTIME 5
-#define Margin 10
-
+#define HORMARGIN 10
+#define VERMARGIN 5
+#define DES_LABEL_H 20
 @interface XRCarouselView()<UIScrollViewDelegate>
 //轮播的图片数组
 @property (nonatomic, strong) NSMutableArray *images;
 //图片描述控件，默认在底部
 @property (nonatomic, strong) UILabel *describeLabel;
+//滚动视图
+@property (nonatomic, strong) UIScrollView *scrollView;
 //分页控件
 @property (nonatomic, strong) UIPageControl *pageControl;
-//显示的imageView
+//当前显示的imageView
 @property (nonatomic, strong) UIImageView *currImageView;
-//辅助滚动的imageView
+//滚动显示的imageView
 @property (nonatomic, strong) UIImageView *otherImageView;
 //当前显示图片的索引
 @property (nonatomic, assign) NSInteger currIndex;
 //将要显示图片的索引
 @property (nonatomic, assign) NSInteger nextIndex;
-//滚动视图
-@property (nonatomic, strong) UIScrollView *scrollView;
 //pageControl图片大小
 @property (nonatomic, assign) CGSize pageImageSize;
 //定时器
@@ -155,12 +156,11 @@
 #pragma mark 设置描述数组
 - (void)setDescribeArray:(NSArray *)describeArray{
     _describeArray = describeArray;
-    if (describeArray == nil) {
+    if (!describeArray.count) {
+        _describeArray = nil;
         self.describeLabel.hidden = YES;
-        return;
-    }
-    //如果描述的个数与图片个数不一致，则补空字符串
-    if (describeArray && describeArray.count > 0) {
+    } else {
+        //如果描述的个数与图片个数不一致，则补空字符串
         if (describeArray.count < _images.count) {
             NSMutableArray *describes = [NSMutableArray arrayWithArray:describeArray];
             for (NSInteger i = describeArray.count; i < _images.count; i++) {
@@ -171,6 +171,8 @@
         self.describeLabel.hidden = NO;
         _describeLabel.text = _describeArray[_currIndex];
     }
+    //重新计算pageControl的位置
+    self.pagePosition = self.pagePosition;
 }
 
 #pragma mark 设置scrollView的contentSize
@@ -217,30 +219,30 @@
 }
 
 #pragma mark 设置pageControl的位置
-- (void)setPageControlPosition {
-    if (_pagePosition == PositionHide) {
-        _pageControl.hidden = YES;
-        return;
-    }
+- (void)setPagePosition:(PageControlPosition)pagePosition {
+    _pagePosition = pagePosition;
+    _pageControl.hidden = (_pagePosition == PositionHide);
+    if (_pageControl.hidden) return;
     
     CGSize size;
-    if (_pageImageSize.width == 0) {//没有设置图片
+    if (!_pageImageSize.width) {//没有设置图片
         size = [_pageControl sizeForNumberOfPages:_pageControl.numberOfPages];
-        size.height = 20;
+        size.height = 8;
     } else {//设置图片了
         size = CGSizeMake(_pageImageSize.width * (_pageControl.numberOfPages * 2 - 1), _pageImageSize.height);
     }
-    
     _pageControl.frame = CGRectMake(0, 0, size.width, size.height);
     
+    CGFloat centerY = self.height - size.height * 0.5 - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
+    CGFloat pointY = self.height - size.height - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
     if (_pagePosition == PositionNone || _pagePosition == PositionBottomCenter)
-        _pageControl.center = CGPointMake(self.width * 0.5, self.height - (_describeLabel.hidden? 10 : 30));
+        _pageControl.center = CGPointMake(self.width * 0.5, centerY);
     else if (_pagePosition == PositionTopCenter)
-        _pageControl.center = CGPointMake(self.width * 0.5, size.height * 0.5);
+        _pageControl.center = CGPointMake(self.width * 0.5, size.height * 0.5 + VERMARGIN);
     else if (_pagePosition == PositionBottomLeft)
-        _pageControl.frame = CGRectMake(Margin, self.height - (_describeLabel.hidden? size.height : size.height + 20), size.width, size.height);
+        _pageControl.frame = CGRectMake(HORMARGIN, pointY, size.width, size.height);
     else
-        _pageControl.frame = CGRectMake(self.width - Margin - size.width, self.height - (_describeLabel.hidden? size.height : size.height + 20), size.width, size.height);
+        _pageControl.frame = CGRectMake(self.width - HORMARGIN - size.width, pointY, size.width, size.height);
 }
 
 #pragma mark 设置定时器时间
@@ -255,7 +257,7 @@
     if (_images.count <= 1) return;
     //如果定时器已开启，先停止再重新开启
     if (self.timer) [self stopTimer];
-    self.timer = [NSTimer timerWithTimeInterval:_time < 1? DEFAULTTIME : _time target:self selector:@selector(nextPage) userInfo:nil repeats:YES];
+    self.timer = [NSTimer timerWithTimeInterval:_time < 2? DEFAULTTIME: _time target:self selector:@selector(nextPage) userInfo:nil repeats:YES];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
@@ -287,8 +289,9 @@
     _scrollView.contentInset = UIEdgeInsetsZero;
     
     _scrollView.frame = self.bounds;
-    _describeLabel.frame = CGRectMake(0, self.height - 20, self.width, 20);
-    [self setPageControlPosition];
+    _describeLabel.frame = CGRectMake(0, self.height - DES_LABEL_H, self.width, DES_LABEL_H);
+    //重新计算pageControl的位置
+    self.pagePosition = self.pagePosition;
     [self setScrollViewContentSize];
 }
 
@@ -297,8 +300,8 @@
 - (void)imageClick {
     if (self.imageClickBlock) {
         self.imageClickBlock(self.currIndex);
-    } else if ([_delegate respondsToSelector:@selector(carouselView:didClickImage:)]){
-        [_delegate carouselView:self didClickImage:self.currIndex];
+    } else if ([_delegate respondsToSelector:@selector(carouselView:clickImageAtIndex:)]){
+        [_delegate carouselView:self clickImageAtIndex:self.currIndex];
     }
 }
 
@@ -361,18 +364,14 @@
         } else self.otherImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
         self.nextIndex = self.currIndex - 1;
         if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
-        if (offsetX <= self.width) {
-            [self changeToNext];
-        }
+        if (offsetX <= self.width) [self changeToNext];
     } else if (offsetX > self.width * 2){//left
         if (_changeMode == ChangeModeFade) {
             self.otherImageView.alpha = offsetX / self.width - 2;
             self.currImageView.alpha = 3 - offsetX / self.width;
         } else self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
         self.nextIndex = (self.currIndex + 1) % _images.count;
-        if (offsetX >= self.width * 3) {
-            [self changeToNext];
-        }
+        if (offsetX >= self.width * 3) [self changeToNext];
     }
     self.otherImageView.image = self.images[self.nextIndex];
 }

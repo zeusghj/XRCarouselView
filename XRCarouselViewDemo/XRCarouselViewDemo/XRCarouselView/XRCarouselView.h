@@ -38,7 +38,7 @@ typedef enum {
  *  @param carouselView 控件本身
  *  @param index        图片索引
  */
-- (void)carouselView:(XRCarouselView *)carouselView didClickImage:(NSInteger)index;
+- (void)carouselView:(XRCarouselView *)carouselView clickImageAtIndex:(NSInteger)index;
 
 @end
 
@@ -76,7 +76,7 @@ typedef enum {
 
 
 /**
- *  轮播的图片数组，可以是图片，也可以是网络路径
+ *  轮播的图片数组，可以是本地图片（UIImage，不能是图片名称），也可以是网络路径
  */
 @property (nonatomic, strong) NSArray *imageArray;
 
@@ -85,8 +85,8 @@ typedef enum {
  *  图片描述的字符串数组，应与图片顺序对应
  *
  *  图片描述控件默认是隐藏的
- *  设置该属性后，控件会自动显示
- *  若之后又需要隐藏，只需将该属性设为nil即可
+ *  设置该属性，控件会显示
+ *  设置为nil或空数组，控件会隐藏
  */
 @property (nonatomic, strong) NSArray *describeArray;
 
