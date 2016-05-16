@@ -113,6 +113,13 @@
     return self;
 }
 
+- (instancetype)initWithImageArray:(NSArray *)imageArray imageClickBlock:(void(^)(NSInteger index))imageClickBlock {
+    if (self = [self initWithFrame:CGRectZero imageArray:imageArray]) {
+        self.imageClickBlock = imageClickBlock;
+    }
+    return self;
+}
+
 + (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray {
     XRCarouselView *carouselView = [[self alloc] init];
     carouselView.imageArray = imageArray;
