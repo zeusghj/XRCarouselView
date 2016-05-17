@@ -146,7 +146,7 @@
         if ([imageArray[i] isKindOfClass:[UIImage class]]) {
             [_images addObject:imageArray[i]];
         } else if ([imageArray[i] isKindOfClass:[NSString class]]){
-            [_images addObject:[UIImage imageNamed:@"placeholder"]];
+            [_images addObject:[UIImage imageNamed:@"XRPlaceholder"]];
             [self downloadImages:i];
         }
     }

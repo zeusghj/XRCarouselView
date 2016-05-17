@@ -55,9 +55,9 @@ typedef enum {
 
 /*
  这里没有提供修改占位图片的接口，如果需要修改，可直接到.m文件中
- 搜索"placeholder"替换为你想要显示的图片名称，或者将原有的占位
- 图片删除并修改你想要显示的图片名称为"placeholder"。
- 不需要占位图片的请将[UIImage imageNamed:@"placeholder"]
+ 搜索"XRPlaceholder"替换为你想要显示的图片名称，或者将原有的占位
+ 图片删除并修改你想要显示的图片名称为"XRPlaceholder"。
+ 不需要占位图片的请将[UIImage imageNamed:@"XRPlaceholder"]
  修改为[UIImage new]或[[UIImage alloc] init]
  */
 

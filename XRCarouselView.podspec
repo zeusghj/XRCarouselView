@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
 
   s.source_files  = "XRCarouselView/*.{h,m}"
-  s.resources = "XRCarouselView/placeholder.png"
+  s.resources = "XRCarouselView/XRPlaceholder.png"
   s.requires_arc = true
 
 end
