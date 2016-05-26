@@ -199,6 +199,7 @@
         self.scrollView.contentSize = CGSizeZero;
         self.scrollView.contentOffset = CGPointZero;
         self.currImageView.frame = CGRectMake(0, 0, self.width, self.height);
+        [self stopTimer];
     }
 }
 
@@ -388,7 +389,11 @@
         self.otherImageView.alpha = 0;
     }
     self.currImageView.image = self.otherImageView.image;
-    self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
+    if (self.imageArray.count>1) {
+        self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
+    } else {
+        self.scrollView.contentOffset = CGPointZero;
+    }
     self.currIndex = self.nextIndex;
     self.pageControl.currentPage = self.currIndex;
     self.describeLabel.text = self.describeArray[self.currIndex];
