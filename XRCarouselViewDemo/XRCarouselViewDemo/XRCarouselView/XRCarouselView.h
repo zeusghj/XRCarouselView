@@ -73,6 +73,7 @@ typedef enum {
 
 /**
  *  设置分页控件位置，默认为PositionBottomCenter
+ *  只有一张图片时，pageControl隐藏
  */
 @property (nonatomic, assign) PageControlPosition pagePosition;
 

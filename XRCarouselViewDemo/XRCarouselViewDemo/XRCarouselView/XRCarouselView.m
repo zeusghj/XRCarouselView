@@ -99,7 +99,6 @@
 - (UIPageControl *)pageControl {
     if (!_pageControl) {
         _pageControl = [[UIPageControl alloc] init];
-        _pageControl.hidesForSinglePage = YES;
         _pageControl.userInteractionEnabled = NO;
     }
     return _pageControl;
@@ -228,7 +227,7 @@
 #pragma mark 设置pageControl的位置
 - (void)setPagePosition:(PageControlPosition)pagePosition {
     _pagePosition = pagePosition;
-    _pageControl.hidden = (_pagePosition == PositionHide);
+    _pageControl.hidden = (_pagePosition == PositionHide) || (_imageArray.count == 1);
     if (_pageControl.hidden) return;
     
     CGSize size;
