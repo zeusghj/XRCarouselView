@@ -362,6 +362,7 @@
 
 #pragma mark- --------UIScrollViewDelegate--------
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    if (CGSizeEqualToSize(CGSizeZero, scrollView.contentSize)) return;
     CGFloat offsetX = scrollView.contentOffset.x;
     [self changeCurrentPageWithOffset:offsetX];
     if (offsetX < self.width * 2) {//right
@@ -389,11 +390,7 @@
         self.otherImageView.alpha = 0;
     }
     self.currImageView.image = self.otherImageView.image;
-    if (self.imageArray.count>1) {
-        self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
-    } else {
-        self.scrollView.contentOffset = CGPointZero;
-    }
+    self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
     self.currIndex = self.nextIndex;
     self.pageControl.currentPage = self.currIndex;
     self.describeLabel.text = self.describeArray[self.currIndex];
