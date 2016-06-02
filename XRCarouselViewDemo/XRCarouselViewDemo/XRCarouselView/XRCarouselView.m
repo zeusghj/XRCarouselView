@@ -74,6 +74,7 @@
         _scrollView.showsHorizontalScrollIndicator = NO;
         _scrollView.showsVerticalScrollIndicator = NO;
         _scrollView.delegate = self;
+        //添加手势监听图片的点击
         [_scrollView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageClick)]];
         _currImageView = [[UIImageView alloc] init];
         [_scrollView addSubview:_currImageView];
@@ -141,10 +142,12 @@
     if (!imageArray.count) return;
     _imageArray = imageArray;
     _images = [NSMutableArray array];
+    
     for (int i = 0; i < imageArray.count; i++) {
         if ([imageArray[i] isKindOfClass:[UIImage class]]) {
             [_images addObject:imageArray[i]];
         } else if ([imageArray[i] isKindOfClass:[NSString class]]){
+            //如果是网络图片，则先添加占位图片，下载完成后替换
             [_images addObject:[UIImage imageNamed:@"XRPlaceholder"]];
             [self downloadImages:i];
         }
@@ -188,6 +191,7 @@
         self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
         self.currImageView.frame = CGRectMake(self.width * 2, 0, self.width, self.height);
         if (_changeMode == ChangeModeFade) {
+            //淡入淡出模式，两个imageView都在同一位置，改变透明度就可以了
             _currImageView.frame = CGRectMake(0, 0, self.width, self.height);
             _otherImageView.frame = self.currImageView.frame;
             _otherImageView.alpha = 0;
@@ -196,6 +200,7 @@
         }
         [self startTimer];
     } else {
+        //只要一张图片时，scrollview不可滚动，且关闭定时器
         self.scrollView.contentSize = CGSizeZero;
         self.scrollView.contentOffset = CGPointZero;
         self.currImageView.frame = CGRectMake(0, 0, self.width, self.height);
@@ -232,7 +237,7 @@
     if (_pageControl.hidden) return;
     
     CGSize size;
-    if (!_pageImageSize.width) {//没有设置图片
+    if (!_pageImageSize.width) {//没有设置图片，系统原有样式
         size = [_pageControl sizeForNumberOfPages:_pageControl.numberOfPages];
         size.height = 8;
     } else {//设置图片了
@@ -242,6 +247,7 @@
     
     CGFloat centerY = self.height - size.height * 0.5 - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
     CGFloat pointY = self.height - size.height - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
+    
     if (_pagePosition == PositionNone || _pagePosition == PositionBottomCenter)
         _pageControl.center = CGPointMake(self.width * 0.5, centerY);
     else if (_pagePosition == PositionTopCenter)
@@ -275,8 +281,10 @@
 
 - (void)nextPage {
     if (_changeMode == ChangeModeFade) {
+        //淡入淡出模式，不需要修改scrollview偏移量，改变两张图片的透明度即可
         self.nextIndex = (self.currIndex + 1) % _images.count;
         self.otherImageView.image = _images[_nextIndex];
+        
         [UIView animateWithDuration:1.2 animations:^{
             self.currImageView.alpha = 0;
             self.otherImageView.alpha = 1;
@@ -284,6 +292,7 @@
         } completion:^(BOOL finished) {
             [self changeToNext];
         }];
+        
     } else [self.scrollView setContentOffset:CGPointMake(self.width * 3, 0) animated:YES];
 }
 
@@ -364,20 +373,27 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (CGSizeEqualToSize(CGSizeZero, scrollView.contentSize)) return;
     CGFloat offsetX = scrollView.contentOffset.x;
+    //滚动过程中改变pageControl的当前页码
     [self changeCurrentPageWithOffset:offsetX];
-    if (offsetX < self.width * 2) {//right
+    
+    //向右滚动
+    if (offsetX < self.width * 2) {
         if (_changeMode == ChangeModeFade) {
             self.currImageView.alpha = offsetX / self.width - 1;
             self.otherImageView.alpha = 2 - offsetX / self.width;
         } else self.otherImageView.frame = CGRectMake(self.width, 0, self.width, self.height);
+        
         self.nextIndex = self.currIndex - 1;
         if (self.nextIndex < 0) self.nextIndex = _images.count - 1;
         if (offsetX <= self.width) [self changeToNext];
-    } else if (offsetX > self.width * 2){//left
+        
+    //向左滚动
+    } else if (offsetX > self.width * 2){
         if (_changeMode == ChangeModeFade) {
             self.otherImageView.alpha = offsetX / self.width - 2;
             self.currImageView.alpha = 3 - offsetX / self.width;
         } else self.otherImageView.frame = CGRectMake(CGRectGetMaxX(_currImageView.frame), 0, self.width, self.height);
+        
         self.nextIndex = (self.currIndex + 1) % _images.count;
         if (offsetX >= self.width * 3) [self changeToNext];
     }
@@ -389,6 +405,7 @@
         self.currImageView.alpha = 1;
         self.otherImageView.alpha = 0;
     }
+    //切换到下一张图片
     self.currImageView.image = self.otherImageView.image;
     self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
     self.currIndex = self.nextIndex;
