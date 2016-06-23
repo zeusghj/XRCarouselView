@@ -39,7 +39,7 @@
     //设置frame
     self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
     
-    
+
     //用代理处理图片点击
     self.carouselView.delegate = self;
     

@@ -77,8 +77,10 @@
         //添加手势监听图片的点击
         [_scrollView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageClick)]];
         _currImageView = [[UIImageView alloc] init];
+        _currImageView.clipsToBounds = YES;
         [_scrollView addSubview:_currImageView];
         _otherImageView = [[UIImageView alloc] init];
+        _otherImageView.clipsToBounds = YES;
         [_scrollView addSubview:_otherImageView];
     }
     return _scrollView;
@@ -135,6 +137,13 @@
     [self addSubview:self.scrollView];
     [self addSubview:self.describeLabel];
     [self addSubview:self.pageControl];
+}
+
+#pragma mark 设置图片的内容模式
+- (void)setContentMode:(UIViewContentMode)contentMode {
+    _contentMode = contentMode;
+    _currImageView.contentMode = contentMode;
+    _otherImageView.contentMode = contentMode;
 }
 
 #pragma mark 设置图片数组

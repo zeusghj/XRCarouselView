@@ -28,7 +28,9 @@ typedef enum {
 
 
 
-
+/**
+ *  代理
+ */
 @protocol XRCarouselViewDelegate <NSObject>
 
 /**
@@ -66,9 +68,15 @@ typedef enum {
 
 
 /**
- *  设置图片切换的模式，默认为ChangeModeDefault
+ *  设置图片的切换模式，默认为ChangeModeDefault
  */
 @property (nonatomic, assign) ChangeMode changeMode;
+
+
+/**
+ *  设置图片的内容模式，默认为UIViewContentModeScaleToFill
+ */
+@property (nonatomic, assign) UIViewContentMode contentMode;
 
 
 /**
@@ -118,7 +126,7 @@ typedef enum {
 /**
  *  构造方法
  *
- *  @param imageArray 图片数组
+ *  @param imageArray    图片数组
  *  @param describeArray 图片描述数组
  *
  */
@@ -158,7 +166,7 @@ typedef enum {
  *  设置分页控件指示器的颜色
  *  不设置则为系统默认
  *
- *  @param color    其他页码的颜色
+ *  @param color        其他页码的颜色
  *  @param currentColor 当前页码的颜色
  */
 - (void)setPageColor:(UIColor *)color andCurrentPageColor:(UIColor *)currentColor;
