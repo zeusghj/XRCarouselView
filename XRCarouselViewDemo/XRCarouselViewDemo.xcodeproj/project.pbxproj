@@ -10,25 +10,27 @@
 		991427D91CD1F9DC00712251 /* 3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 991427D61CD1F9DC00712251 /* 3.jpg */; };
 		991427DA1CD1F9DC00712251 /* 2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 991427D71CD1F9DC00712251 /* 2.jpg */; };
 		991427DB1CD1F9DC00712251 /* 1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 991427D81CD1F9DC00712251 /* 1.jpg */; };
-		991B32061CC0DC9E0000C3C8 /* XRPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 991B32051CC0DC9E0000C3C8 /* XRPlaceholder.png */; };
 		99326F351CACC201007E138D /* current.png in Resources */ = {isa = PBXBuildFile; fileRef = 99326F301CACC201007E138D /* current.png */; };
 		99326F361CACC201007E138D /* other.png in Resources */ = {isa = PBXBuildFile; fileRef = 99326F311CACC201007E138D /* other.png */; };
+		9980F28C1D21186300E1986E /* XRCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9980F28A1D21186300E1986E /* XRCarouselView.m */; };
+		9980F28D1D21186300E1986E /* XRPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 9980F28B1D21186300E1986E /* XRPlaceholder.png */; };
 		99C271921C9AD5C000682904 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271911C9AD5C000682904 /* main.m */; };
 		99C271951C9AD5C000682904 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271941C9AD5C000682904 /* AppDelegate.m */; };
 		99C271981C9AD5C000682904 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271971C9AD5C000682904 /* ViewController.m */; };
 		99C2719B1C9AD5C000682904 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99C271991C9AD5C000682904 /* Main.storyboard */; };
 		99C2719D1C9AD5C000682904 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 99C2719C1C9AD5C000682904 /* Assets.xcassets */; };
 		99C271A01C9AD5C000682904 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 99C2719E1C9AD5C000682904 /* LaunchScreen.storyboard */; };
-		99C271AC1C9AD5C900682904 /* XRCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271AA1C9AD5C900682904 /* XRCarouselView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		991427D61CD1F9DC00712251 /* 3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 3.jpg; sourceTree = "<group>"; };
 		991427D71CD1F9DC00712251 /* 2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 2.jpg; sourceTree = "<group>"; };
 		991427D81CD1F9DC00712251 /* 1.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = 1.jpg; sourceTree = "<group>"; };
-		991B32051CC0DC9E0000C3C8 /* XRPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XRPlaceholder.png; sourceTree = "<group>"; };
 		99326F301CACC201007E138D /* current.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = current.png; sourceTree = "<group>"; };
 		99326F311CACC201007E138D /* other.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = other.png; sourceTree = "<group>"; };
+		9980F2891D21186300E1986E /* XRCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XRCarouselView.h; sourceTree = "<group>"; };
+		9980F28A1D21186300E1986E /* XRCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XRCarouselView.m; sourceTree = "<group>"; };
+		9980F28B1D21186300E1986E /* XRPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XRPlaceholder.png; sourceTree = "<group>"; };
 		99C2718D1C9AD5C000682904 /* XRCarouselViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XRCarouselViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99C271911C9AD5C000682904 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		99C271931C9AD5C000682904 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -39,8 +41,6 @@
 		99C2719C1C9AD5C000682904 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		99C2719F1C9AD5C000682904 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		99C271A11C9AD5C000682904 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		99C271A91C9AD5C900682904 /* XRCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XRCarouselView.h; sourceTree = "<group>"; };
-		99C271AA1C9AD5C900682904 /* XRCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XRCarouselView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +66,16 @@
 			path = Images;
 			sourceTree = "<group>";
 		};
+		9980F2881D21186300E1986E /* XRCarouselView */ = {
+			isa = PBXGroup;
+			children = (
+				9980F2891D21186300E1986E /* XRCarouselView.h */,
+				9980F28A1D21186300E1986E /* XRCarouselView.m */,
+				9980F28B1D21186300E1986E /* XRPlaceholder.png */,
+			);
+			path = XRCarouselView;
+			sourceTree = "<group>";
+		};
 		99C271841C9AD5C000682904 = {
 			isa = PBXGroup;
 			children = (
@@ -85,7 +95,7 @@
 		99C2718F1C9AD5C000682904 /* XRCarouselViewDemo */ = {
 			isa = PBXGroup;
 			children = (
-				99C271A71C9AD5C900682904 /* XRCarouselView */,
+				9980F2881D21186300E1986E /* XRCarouselView */,
 				99C271931C9AD5C000682904 /* AppDelegate.h */,
 				99C271941C9AD5C000682904 /* AppDelegate.m */,
 				99C271961C9AD5C000682904 /* ViewController.h */,
@@ -106,16 +116,6 @@
 				99C271911C9AD5C000682904 /* main.m */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		99C271A71C9AD5C900682904 /* XRCarouselView */ = {
-			isa = PBXGroup;
-			children = (
-				991B32051CC0DC9E0000C3C8 /* XRPlaceholder.png */,
-				99C271A91C9AD5C900682904 /* XRCarouselView.h */,
-				99C271AA1C9AD5C900682904 /* XRCarouselView.m */,
-			);
-			path = XRCarouselView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,7 +177,7 @@
 			files = (
 				99326F351CACC201007E138D /* current.png in Resources */,
 				99C271A01C9AD5C000682904 /* LaunchScreen.storyboard in Resources */,
-				991B32061CC0DC9E0000C3C8 /* XRPlaceholder.png in Resources */,
+				9980F28D1D21186300E1986E /* XRPlaceholder.png in Resources */,
 				99C2719D1C9AD5C000682904 /* Assets.xcassets in Resources */,
 				99326F361CACC201007E138D /* other.png in Resources */,
 				991427D91CD1F9DC00712251 /* 3.jpg in Resources */,
@@ -196,7 +196,7 @@
 			files = (
 				99C271981C9AD5C000682904 /* ViewController.m in Sources */,
 				99C271951C9AD5C000682904 /* AppDelegate.m in Sources */,
-				99C271AC1C9AD5C900682904 /* XRCarouselView.m in Sources */,
+				9980F28C1D21186300E1986E /* XRCarouselView.m in Sources */,
 				99C271921C9AD5C000682904 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
