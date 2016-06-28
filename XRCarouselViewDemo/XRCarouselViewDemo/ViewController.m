@@ -20,29 +20,23 @@
     
     self.title = @"轮播Demo";
     
+    NSArray *arr = @[@"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg",//网络图片
+                     [UIImage imageNamed:@"3.jpg"],//本地图片，传image，不能传名称
+                     @"http://photo.l99.com/source/11/1330351552722_cxn26e.gif",//网络gif图片
+                     gifImageNamed(@"4")];//本地gif使用gifImageNamed(name)函数创建
     
-    //本地图片
-    NSArray *arr1 = @[[UIImage imageNamed:@"1.jpg"], [UIImage imageNamed:@"2.jpg"], [UIImage imageNamed:@"3.jpg"]];
-    
-    //网络图片
-    NSArray *arr2 = @[@"http://hiphotos.baidu.com/praisejesus/pic/item/e8df7df89fac869eb68f316d.jpg", @"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg", @"http://photo.l99.com/source/11/1330351552722_cxn26e.gif", @"http://file27.mafengwo.net/M00/B2/12/wKgB6lO0ahWAMhL8AAV1yBFJDJw20.jpeg"];
-    
-    //既有本地图片也有网络图片
-    NSArray *arr3 = @[@"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg", [UIImage imageNamed:@"2.jpg"], @"http://photo.l99.com/source/11/1330351552722_cxn26e.gif", [UIImage imageNamed:@"1.jpg"]];
     NSArray *describeArray = @[@"这是第一张图片的描述", @"这是第二张图片的描述", @"这是第三张图片的描述", @"这是第四张图片的描述"];
     
     /**
      *  通过代码创建
      */
-    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr3 describeArray:describeArray];
+    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr describeArray:describeArray];
     
     //设置frame
     self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
     
-
     //用代理处理图片点击
     self.carouselView.delegate = self;
-    
     
     //设置每张图片的停留时间，默认值为5s，最少为2s
     _carouselView.time = 2;
@@ -53,7 +47,6 @@
     //设置分页控件的位置，默认为PositionBottomCenter
     _carouselView.pagePosition = PositionBottomRight;
     
-
     /**
      *  修改图片描述控件的外观，不需要修改的传nil
      *
@@ -70,10 +63,13 @@
     [self.view addSubview:_carouselView];
     
     
+    
+    
+    
     /**
      *  通过storyboard创建的轮播控件
      */
-    _carouselView1.imageArray = arr2;
+    _carouselView1.imageArray = arr;
     //设置分页控件指示器的颜色
     [_carouselView1 setPageColor:[UIColor blueColor] andCurrentPageColor:[UIColor redColor]];
     //设置图片切换的方式

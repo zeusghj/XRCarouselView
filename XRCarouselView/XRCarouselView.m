@@ -37,6 +37,7 @@
 @property (nonatomic, strong) NSOperationQueue *queue;
 @end
 
+
 @implementation XRCarouselView
 #pragma mark- 初始化方法
 //创建用来缓存图片的文件夹
@@ -151,7 +152,6 @@
     if (!imageArray.count) return;
     _imageArray = imageArray;
     _images = [NSMutableArray array];
-    
     for (int i = 0; i < imageArray.count; i++) {
         if ([imageArray[i] isKindOfClass:[UIImage class]]) {
             [_images addObject:imageArray[i]];
@@ -332,19 +332,19 @@
 
 #pragma mark 下载网络图片
 - (void)downloadImages:(int)index {
-    NSString *key = _imageArray[index];
+    NSString *urlString = _imageArray[index];
     //从沙盒中取图片
-    NSString *path = [[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"] stringByAppendingPathComponent:[key lastPathComponent]];
+    NSString *path = [[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"] stringByAppendingPathComponent:[urlString lastPathComponent]];
     NSData *data = [NSData dataWithContentsOfFile:path];
     if (data) {
-        _images[index] = [self imageWithData:data];
+        _images[index] = getImageWithData(data);
         return;
     }
     //下载图片
     NSBlockOperation *download = [NSBlockOperation blockOperationWithBlock:^{
-        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:key]];
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
         if (!data) return;
-        UIImage *image = [self imageWithData:data];
+        UIImage *image = getImageWithData(data);
         //取到的data有可能不是图片
         if (image) {
             self.images[index] = image;
@@ -357,7 +357,7 @@
 }
 
 #pragma mark 下载图片，如果是gif则计算动画时长
-- (UIImage *)imageWithData:(NSData *)data {
+UIImage *getImageWithData(NSData *data) {
     CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
     size_t count = CGImageSourceGetCount(imageSource);
     if (count <= 1) { //非gif
@@ -369,7 +369,7 @@
         for (size_t i = 0; i < count; i++) {
             CGImageRef image = CGImageSourceCreateImageAtIndex(imageSource, i, NULL);
             if (!image) continue;
-            duration += [self durationWithSource:imageSource atIndex:i];
+            duration += durationWithSourceAtIndex(imageSource, i);
             [images addObject:[UIImage imageWithCGImage:image]];
             CGImageRelease(image);
         }
@@ -381,7 +381,7 @@
 
 
 #pragma mark 获取每一帧图片的时长
-- (float)durationWithSource:(CGImageSourceRef)source atIndex:(NSUInteger)index  {
+float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
     float duration = 0.1f;
     CFDictionaryRef propertiesRef = CGImageSourceCopyPropertiesAtIndex(source, index, nil);
     NSDictionary *properties = (__bridge NSDictionary *)propertiesRef;
@@ -396,6 +396,7 @@
     CFRelease(propertiesRef);
     return duration;
 }
+
 
 #pragma mark 清除沙盒中的图片缓存
 - (void)clearDiskCache {
@@ -473,3 +474,22 @@
 }
 
 @end
+
+
+UIImage *gifImageNamed(NSString *imageName) {
+    
+    if (![imageName hasSuffix:@".gif"]) {
+        imageName = [imageName stringByAppendingString:@".gif"];
+    }
+    
+    NSString *imagePath = [[NSBundle mainBundle] pathForResource:imageName ofType:nil];
+    NSData *data = [NSData dataWithContentsOfFile:imagePath];
+    if (data) return getImageWithData(data);
+    
+    return [UIImage imageNamed:imageName];
+}
+
+
+
+
+

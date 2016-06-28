@@ -14,6 +14,7 @@
 		99326F361CACC201007E138D /* other.png in Resources */ = {isa = PBXBuildFile; fileRef = 99326F311CACC201007E138D /* other.png */; };
 		9980F28C1D21186300E1986E /* XRCarouselView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9980F28A1D21186300E1986E /* XRCarouselView.m */; };
 		9980F28D1D21186300E1986E /* XRPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 9980F28B1D21186300E1986E /* XRPlaceholder.png */; };
+		9980F28F1D211F4C00E1986E /* 4.gif in Resources */ = {isa = PBXBuildFile; fileRef = 9980F28E1D211F4C00E1986E /* 4.gif */; };
 		99C271921C9AD5C000682904 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271911C9AD5C000682904 /* main.m */; };
 		99C271951C9AD5C000682904 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271941C9AD5C000682904 /* AppDelegate.m */; };
 		99C271981C9AD5C000682904 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 99C271971C9AD5C000682904 /* ViewController.m */; };
@@ -31,6 +32,7 @@
 		9980F2891D21186300E1986E /* XRCarouselView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XRCarouselView.h; sourceTree = "<group>"; };
 		9980F28A1D21186300E1986E /* XRCarouselView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XRCarouselView.m; sourceTree = "<group>"; };
 		9980F28B1D21186300E1986E /* XRPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = XRPlaceholder.png; sourceTree = "<group>"; };
+		9980F28E1D211F4C00E1986E /* 4.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = 4.gif; sourceTree = "<group>"; };
 		99C2718D1C9AD5C000682904 /* XRCarouselViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XRCarouselViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		99C271911C9AD5C000682904 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		99C271931C9AD5C000682904 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -57,6 +59,7 @@
 		99326F2C1CACC201007E138D /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				9980F28E1D211F4C00E1986E /* 4.gif */,
 				991427D61CD1F9DC00712251 /* 3.jpg */,
 				991427D71CD1F9DC00712251 /* 2.jpg */,
 				991427D81CD1F9DC00712251 /* 1.jpg */,
@@ -182,6 +185,7 @@
 				99326F361CACC201007E138D /* other.png in Resources */,
 				991427D91CD1F9DC00712251 /* 3.jpg in Resources */,
 				991427DB1CD1F9DC00712251 /* 1.jpg in Resources */,
+				9980F28F1D211F4C00E1986E /* 4.gif in Resources */,
 				991427DA1CD1F9DC00712251 /* 2.jpg in Resources */,
 				99C2719B1C9AD5C000682904 /* Main.storyboard in Resources */,
 			);

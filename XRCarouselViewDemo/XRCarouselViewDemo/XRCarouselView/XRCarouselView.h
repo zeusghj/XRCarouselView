@@ -45,6 +45,12 @@ typedef enum {
 @end
 
 
+/**
+ *  C语言函数，创建本地gif图片
+ *  本地gif图片请使用该函数创建，否则gif无动画效果
+ *  @param imageName 图片名称
+ */
+UIImage *gifImageNamed(NSString *imageName);
 
 
 /**
@@ -88,6 +94,7 @@ typedef enum {
 
 /**
  *  轮播的图片数组，可以是本地图片（UIImage，不能是图片名称），也可以是网络路径
+ *  支持网络gif图片，本地gif需做处理后传入
  */
 @property (nonatomic, strong) NSArray *imageArray;
 
