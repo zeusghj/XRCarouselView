@@ -108,28 +108,6 @@
     return _pageControl;
 }
 
-#pragma mark- 构造方法
-- (instancetype)initWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray {
-    if (self = [super initWithFrame:frame]) {
-        self.imageArray = imageArray;
-    }
-    return self;
-}
-
-- (instancetype)initWithImageArray:(NSArray *)imageArray imageClickBlock:(void(^)(NSInteger index))imageClickBlock {
-    if (self = [self initWithFrame:CGRectZero imageArray:imageArray]) {
-        self.imageClickBlock = imageClickBlock;
-    }
-    return self;
-}
-
-+ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray {
-    XRCarouselView *carouselView = [[self alloc] init];
-    carouselView.imageArray = imageArray;
-    carouselView.describeArray = describeArray;
-    return carouselView;
-}
-
 
 #pragma mark- --------设置相关方法--------
 #pragma mark 设置控件的frame，并添加子控件

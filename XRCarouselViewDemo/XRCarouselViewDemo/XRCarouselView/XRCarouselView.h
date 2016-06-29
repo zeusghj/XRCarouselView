@@ -128,20 +128,6 @@ UIImage *gifImageNamed(NSString *imageName);
 @property (nonatomic, weak) id<XRCarouselViewDelegate> delegate;
 
 
-
-#pragma mark 构造方法
-/**
- *  构造方法
- *
- *  @param imageArray    图片数组
- *  @param describeArray 图片描述数组
- *
- */
-- (instancetype)initWithFrame:(CGRect)frame imageArray:(NSArray *)imageArray;
-- (instancetype)initWithImageArray:(NSArray *)imageArray imageClickBlock:(void(^)(NSInteger index))imageClickBlock;
-+ (instancetype)carouselViewWithImageArray:(NSArray *)imageArray describeArray:(NSArray *)describeArray;
-
-
 #pragma mark 方法
 
 /**

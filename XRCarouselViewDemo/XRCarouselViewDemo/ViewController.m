@@ -30,10 +30,12 @@
     /**
      *  通过代码创建
      */
-    self.carouselView = [XRCarouselView carouselViewWithImageArray:arr describeArray:describeArray];
-    
-    //设置frame
+    self.carouselView = [[XRCarouselView alloc] init];
     self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
+    
+    //设置图片及描述数组
+    self.carouselView.imageArray = arr;
+    self.carouselView.describeArray = describeArray;
     
     //用代理处理图片点击
     self.carouselView.delegate = self;
