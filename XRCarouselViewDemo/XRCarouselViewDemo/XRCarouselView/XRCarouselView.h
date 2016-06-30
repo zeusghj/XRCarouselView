@@ -117,6 +117,12 @@ UIImage *gifImageNamed(NSString *imageName);
 
 
 /**
+ *  是否开启图片缓存，默认为YES
+ */
+@property (nonatomic, assign) BOOL autoCache;
+
+
+/**
  *  点击图片后要执行的操作，会返回图片在数组中的索引
  */
 @property (nonatomic, copy) ClickBlock imageClickBlock;
@@ -178,6 +184,6 @@ UIImage *gifImageNamed(NSString *imageName);
 /**
  *  清除沙盒中的图片缓存
  */
-- (void)clearDiskCache;
++ (void)clearDiskCache;
 
 @end

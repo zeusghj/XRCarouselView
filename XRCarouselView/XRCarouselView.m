@@ -37,17 +37,40 @@
 @property (nonatomic, strong) NSOperationQueue *queue;
 @end
 
+static NSString *cache;
+
 
 @implementation XRCarouselView
 #pragma mark- 初始化方法
 //创建用来缓存图片的文件夹
 + (void)initialize {
-    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
+    cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
     BOOL isDir = NO;
     BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:cache isDirectory:&isDir];
     if (!isExists || !isDir) {
         [[NSFileManager defaultManager] createDirectoryAtPath:cache withIntermediateDirectories:YES attributes:nil error:nil];
     }
+}
+
+#pragma mark 代码创建
+- (instancetype)initWithFrame:(CGRect)frame {
+    if (self = [super initWithFrame:frame]) {
+        [self initSubView];
+    }
+    return self;
+}
+
+#pragma mark nib创建
+- (void)awakeFromNib {
+    [self initSubView];
+}
+
+#pragma mark 初始化控件
+- (void)initSubView {
+    self.autoCache = YES;
+    [self addSubview:self.scrollView];
+    [self addSubview:self.describeLabel];
+    [self addSubview:self.pageControl];
 }
 
 #pragma mark- frame相关
@@ -110,14 +133,6 @@
 
 
 #pragma mark- --------设置相关方法--------
-#pragma mark 设置控件的frame，并添加子控件
-- (void)setFrame:(CGRect)frame {
-    [super setFrame:frame];
-    [self addSubview:self.scrollView];
-    [self addSubview:self.describeLabel];
-    [self addSubview:self.pageControl];
-}
-
 #pragma mark 设置图片的内容模式
 - (void)setContentMode:(UIViewContentMode)contentMode {
     _contentMode = contentMode;
@@ -311,12 +326,15 @@
 #pragma mark 下载网络图片
 - (void)downloadImages:(int)index {
     NSString *urlString = _imageArray[index];
-    //从沙盒中取图片
-    NSString *path = [[[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"] stringByAppendingPathComponent:[urlString lastPathComponent]];
-    NSData *data = [NSData dataWithContentsOfFile:path];
-    if (data) {
-        _images[index] = getImageWithData(data);
-        return;
+    NSString *imageName = [urlString stringByReplacingOccurrencesOfString:@"/" withString:@""];
+    NSString *path = [cache stringByAppendingPathComponent:imageName];
+    if (_autoCache) {
+        //从沙盒中取图片
+        NSData *data = [NSData dataWithContentsOfFile:path];
+        if (data) {
+            _images[index] = getImageWithData(data);
+            return;
+        }
     }
     //下载图片
     NSBlockOperation *download = [NSBlockOperation blockOperationWithBlock:^{
@@ -328,7 +346,7 @@
             self.images[index] = image;
             //如果下载的图片为当前要显示的图片，直接到主线程给imageView赋值，否则要等到下一轮才会显示
             if (_currIndex == index) [_currImageView performSelectorOnMainThread:@selector(setImage:) withObject:image waitUntilDone:NO];
-            [data writeToFile:path atomically:YES];
+            if (_autoCache) [data writeToFile:path atomically:YES];
         }
     }];
     [self.queue addOperation:download];
@@ -377,8 +395,7 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
 
 
 #pragma mark 清除沙盒中的图片缓存
-- (void)clearDiskCache {
-    NSString *cache = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"XRCarousel"];
++ (void)clearDiskCache {
     NSArray *contents = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cache error:NULL];
     for (NSString *fileName in contents) {
         [[NSFileManager defaultManager] removeItemAtPath:[cache stringByAppendingPathComponent:fileName] error:nil];

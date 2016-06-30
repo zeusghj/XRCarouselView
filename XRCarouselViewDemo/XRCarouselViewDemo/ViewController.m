@@ -33,6 +33,7 @@
     self.carouselView = [[XRCarouselView alloc] init];
     self.carouselView.frame = CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180);
     
+    
     //设置图片及描述数组
     self.carouselView.imageArray = arr;
     self.carouselView.describeArray = describeArray;
@@ -72,6 +73,7 @@
      *  通过storyboard创建的轮播控件
      */
     _carouselView1.imageArray = arr;
+
     //设置分页控件指示器的颜色
     [_carouselView1 setPageColor:[UIColor blueColor] andCurrentPageColor:[UIColor redColor]];
     //设置图片切换的方式
@@ -81,6 +83,11 @@
         NSLog(@"点击了第%ld张图片", index);
     };
     _carouselView1.time = 3;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    //清除缓存
+    [XRCarouselView clearDiskCache];
 }
 
 
