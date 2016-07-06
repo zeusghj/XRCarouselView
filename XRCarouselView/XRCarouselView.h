@@ -12,7 +12,7 @@ typedef void(^ClickBlock)(NSInteger index);
 
 //pageControl的显示位置
 typedef enum {
-    PositionNone,           //默认值 == PositionBottomCenter
+    PositionDefault,           //默认值 == PositionBottomCenter
     PositionHide,           //隐藏
     PositionTopCenter,      //中上
     PositionBottomLeft,     //左下

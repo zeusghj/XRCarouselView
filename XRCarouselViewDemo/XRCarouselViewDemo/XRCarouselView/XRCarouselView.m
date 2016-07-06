@@ -250,7 +250,7 @@ static NSString *cache;
     CGFloat centerY = self.height - size.height * 0.5 - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
     CGFloat pointY = self.height - size.height - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
     
-    if (_pagePosition == PositionNone || _pagePosition == PositionBottomCenter)
+    if (_pagePosition == PositionDefault || _pagePosition == PositionBottomCenter)
         _pageControl.center = CGPointMake(self.width * 0.5, centerY);
     else if (_pagePosition == PositionTopCenter)
         _pageControl.center = CGPointMake(self.width * 0.5, size.height * 0.5 + VERMARGIN);

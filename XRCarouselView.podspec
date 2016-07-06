@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "XRCarouselView"
-  s.version      = "2.5.1"
+  s.version      = "2.5.2"
   s.summary      = "史上最简单的图片轮播，秒集成，同时支持本地与网络图片，自带缓存，不依赖任何第三方库，可左右滚动与淡入淡出"
 
   s.homepage     = "https://github.com/codingZero/XRCarouselView"
