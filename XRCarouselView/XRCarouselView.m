@@ -142,9 +142,12 @@ static NSString *cache;
 
 #pragma mark 设置图片数组
 - (void)setImageArray:(NSArray *)imageArray{
+    
     if (!imageArray.count) return;
+    
     _imageArray = imageArray;
     _images = [NSMutableArray array];
+    
     for (int i = 0; i < imageArray.count; i++) {
         if ([imageArray[i] isKindOfClass:[UIImage class]]) {
             [_images addObject:imageArray[i]];
@@ -192,6 +195,7 @@ static NSString *cache;
         self.scrollView.contentSize = CGSizeMake(self.width * 5, 0);
         self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
         self.currImageView.frame = CGRectMake(self.width * 2, 0, self.width, self.height);
+        
         if (_changeMode == ChangeModeFade) {
             //淡入淡出模式，两个imageView都在同一位置，改变透明度就可以了
             _currImageView.frame = CGRectMake(0, 0, self.width, self.height);
@@ -200,6 +204,7 @@ static NSString *cache;
             [self insertSubview:self.currImageView atIndex:0];
             [self insertSubview:self.otherImageView atIndex:1];
         }
+        
         [self startTimer];
     } else {
         //只要一张图片时，scrollview不可滚动，且关闭定时器
@@ -328,8 +333,7 @@ static NSString *cache;
     NSString *urlString = _imageArray[index];
     NSString *imageName = [urlString stringByReplacingOccurrencesOfString:@"/" withString:@""];
     NSString *path = [cache stringByAppendingPathComponent:imageName];
-    if (_autoCache) {
-        //从沙盒中取图片
+    if (_autoCache) { //如果开启的缓存功能，先从沙盒中取图片
         NSData *data = [NSData dataWithContentsOfFile:path];
         if (data) {
             _images[index] = getImageWithData(data);
@@ -455,6 +459,7 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
     //切换到下一张图片
     self.currImageView.image = self.otherImageView.image;
     self.scrollView.contentOffset = CGPointMake(self.width * 2, 0);
+    [self.scrollView layoutSubviews];
     self.currIndex = self.nextIndex;
     self.pageControl.currentPage = self.currIndex;
     self.describeLabel.text = self.describeArray[self.currIndex];
@@ -466,6 +471,15 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     [self startTimer];
+}
+
+//该方法用来修复滚动过快导致分页异常的bug
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    CGPoint pointInSelf = [_scrollView convertPoint:_otherImageView.frame.origin toView:self];
+    if (ABS(pointInSelf.x) != self.width) {
+        CGFloat offsetX = _scrollView.contentOffset.x + pointInSelf.x;
+        [self.scrollView setContentOffset:CGPointMake(offsetX, 0) animated:YES];
+    }
 }
 
 @end
