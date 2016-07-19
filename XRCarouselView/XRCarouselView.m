@@ -475,6 +475,7 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
 
 //该方法用来修复滚动过快导致分页异常的bug
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
+    if (_changeMode == ChangeModeFade) return;
     CGPoint pointInSelf = [_scrollView convertPoint:_otherImageView.frame.origin toView:self];
     if (ABS(pointInSelf.x) != self.width) {
         CGFloat offsetX = _scrollView.contentOffset.x + pointInSelf.x;
