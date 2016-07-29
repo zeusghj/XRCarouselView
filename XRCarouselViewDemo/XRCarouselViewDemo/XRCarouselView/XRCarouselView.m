@@ -93,6 +93,7 @@ static NSString *cache;
 - (UIScrollView *)scrollView {
     if (!_scrollView) {
         _scrollView = [[UIScrollView alloc] init];
+        _scrollView.scrollsToTop = NO;
         _scrollView.pagingEnabled = YES;
         _scrollView.bounces = NO;
         _scrollView.showsHorizontalScrollIndicator = NO;
