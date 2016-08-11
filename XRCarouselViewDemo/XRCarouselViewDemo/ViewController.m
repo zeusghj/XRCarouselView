@@ -22,9 +22,9 @@
     
     NSArray *arr = @[
                      @"http://pic39.nipic.com/20140226/18071023_162553457000_2.jpg",//网络图片
-                     [UIImage imageNamed:@"3.jpg"],//本地图片，传image，不能传名称
+                     [UIImage imageNamed:@"1.jpg"],//本地图片，传image，不能传名称
                      @"http://photo.l99.com/source/11/1330351552722_cxn26e.gif",//网络gif图片
-                     gifImageNamed(@"4.gif")//本地gif使用gifImageNamed(name)函数创建
+                     gifImageNamed(@"2.gif")//本地gif使用gifImageNamed(name)函数创建
                      ];
     
     NSArray *describeArray = @[@"网络图片", @"本地图片", @"网络动态图", @"本地动态图"];
@@ -34,6 +34,9 @@
      */
     self.carouselView = [[XRCarouselView alloc] initWithFrame:CGRectMake(0, 100, [UIScreen mainScreen].bounds.size.width, 180)];
     
+    
+    //设置占位图片,须在设置图片数组之前设置,不设置则为默认占位图
+    _carouselView.placeholderImage = [UIImage imageNamed:@"placeholderImage.jpg"];
     
     //设置图片及描述数组
     _carouselView.imageArray = arr;
@@ -88,16 +91,7 @@
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     //清除缓存
-//    [XRCarouselView clearDiskCache];
-    
-    NSURL * url = [NSURL URLWithString:UIApplicationOpenSettingsURLString];
-    
-    if([[UIApplication sharedApplication] canOpenURL:url]) {
-        
-        NSURL *url =[NSURL URLWithString:UIApplicationOpenSettingsURLString];
-        [[UIApplication sharedApplication] openURL:url];
-        
-    }
+    [XRCarouselView clearDiskCache];
 }
 
 

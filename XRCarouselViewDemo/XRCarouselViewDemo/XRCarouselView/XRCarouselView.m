@@ -154,7 +154,8 @@ static NSString *cache;
             [_images addObject:imageArray[i]];
         } else if ([imageArray[i] isKindOfClass:[NSString class]]){
             //如果是网络图片，则先添加占位图片，下载完成后替换
-            [_images addObject:[UIImage imageNamed:@"XRPlaceholder"]];
+            if (_placeholderImage) [_images addObject:_placeholderImage];
+            else [_images addObject:[UIImage imageNamed:@"XRPlaceholder"]];
             [self downloadImages:i];
         }
     }

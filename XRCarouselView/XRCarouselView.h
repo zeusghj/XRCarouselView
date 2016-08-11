@@ -61,15 +61,6 @@ UIImage *gifImageNamed(NSString *imageName);
 @interface XRCarouselView : UIView
 
 
-/*
- 这里没有提供修改占位图片的接口，如果需要修改，可直接到.m文件中
- 搜索"XRPlaceholder"替换为你想要显示的图片名称，或者将原有的占位
- 图片删除并修改你想要显示的图片名称为"XRPlaceholder"。
- 不需要占位图片的请将[UIImage imageNamed:@"XRPlaceholder"]
- 修改为[UIImage new]或[[UIImage alloc] init]
- */
-
-
 #pragma mark 属性
 
 
@@ -90,6 +81,13 @@ UIImage *gifImageNamed(NSString *imageName);
  *  只有一张图片时，pageControl隐藏
  */
 @property (nonatomic, assign) PageControlPosition pagePosition;
+
+
+/**
+ *  占位图片，在设置图片数组之前设置
+ *  不设置则为默认占位图
+ */
+@property (nonatomic, strong) UIImage *placeholderImage;
 
 
 /**
