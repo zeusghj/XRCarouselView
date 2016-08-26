@@ -38,7 +38,7 @@
     //设置占位图片,须在设置图片数组之前设置,不设置则为默认占位图
     _carouselView.placeholderImage = [UIImage imageNamed:@"placeholderImage.jpg"];
     
-    //设置图片及描述数组
+    //设置图片数组及图片描述文字
     _carouselView.imageArray = arr;
     _carouselView.describeArray = describeArray;
     
@@ -89,9 +89,11 @@
     _carouselView1.time = 3;
 }
 
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     //清除缓存
     [XRCarouselView clearDiskCache];
+   
 }
 
 
