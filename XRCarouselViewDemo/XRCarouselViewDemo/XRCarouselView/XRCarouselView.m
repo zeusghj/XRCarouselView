@@ -52,6 +52,7 @@ static NSString *cache;
     }
 }
 
+
 #pragma mark 代码创建
 - (instancetype)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -62,6 +63,7 @@ static NSString *cache;
 
 #pragma mark nib创建
 - (void)awakeFromNib {
+    [super awakeFromNib];
     [self initSubView];
 }
 
@@ -206,7 +208,6 @@ static NSString *cache;
             [self insertSubview:self.currImageView atIndex:0];
             [self insertSubview:self.otherImageView atIndex:1];
         }
-        
         [self startTimer];
     } else {
         //只要一张图片时，scrollview不可滚动，且关闭定时器
@@ -279,7 +280,10 @@ static NSString *cache;
     if (_images.count <= 1) return;
     //如果定时器已开启，先停止再重新开启
     if (self.timer) [self stopTimer];
-    self.timer = [NSTimer timerWithTimeInterval:_time < 2? DEFAULTTIME: _time target:self selector:@selector(nextPage) userInfo:nil repeats:YES];
+    __weak typeof(self) weakSelf = self;
+    self.timer = [NSTimer timerWithTimeInterval:_time < 1? DEFAULTTIME: _time repeats:YES block:^(NSTimer * _Nonnull timer) {
+        [weakSelf nextPage];
+    }];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
 }
 
@@ -316,7 +320,7 @@ static NSString *cache;
     _scrollView.frame = self.bounds;
     _describeLabel.frame = CGRectMake(0, self.height - DES_LABEL_H, self.width, DES_LABEL_H);
     //重新计算pageControl的位置
-    self.pagePosition = self.pagePosition;
+    [self setPagePosition:_pagePosition];
     [self setScrollViewContentSize];
 }
 
