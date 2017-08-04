@@ -108,8 +108,8 @@ UIImage *gifImageNamed(NSString *imageName);
 
 
 /**
- *  每一页停留时间，默认为5s，最少2s
- *  当设置的值小于2s时，则为默认值
+ *  每一页停留时间，默认为5s，最少1s
+ *  当设置的值小于1s时，则为默认值
  */
 @property (nonatomic, assign) NSTimeInterval time;
 
