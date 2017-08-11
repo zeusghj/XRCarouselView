@@ -12,6 +12,30 @@
 #define HORMARGIN 10
 #define VERMARGIN 5
 #define DES_LABEL_H 20
+
+
+@interface NSTimer (XRTimer)
++ (NSTimer *)xr_timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer *))block;
+@end
+
+
+@implementation NSTimer (XRTimer)
+
++ (NSTimer *)xr_timerWithTimeInterval:(NSTimeInterval)interval repeats:(BOOL)repeats block:(void (^)(NSTimer *))block {
+    if ([self respondsToSelector:@selector(timerWithTimeInterval:repeats:block:)]) {
+        return [self timerWithTimeInterval:interval repeats:repeats block:block];
+    }
+    return [self timerWithTimeInterval:interval target:self selector:@selector(timerAction:) userInfo:block repeats:repeats];
+}
+
++ (void)timerAction:(NSTimer *)timer {
+    void (^block)(NSTimer *timer) = timer.userInfo;
+    if (block) block(timer);
+}
+@end
+
+
+
 @interface XRCarouselView()<UIScrollViewDelegate>
 //轮播的图片数组
 @property (nonatomic, strong) NSMutableArray *images;
@@ -281,7 +305,7 @@ static NSString *cache;
     //如果定时器已开启，先停止再重新开启
     if (self.timer) [self stopTimer];
     __weak typeof(self) weakSelf = self;
-    self.timer = [NSTimer timerWithTimeInterval:_time < 1? DEFAULTTIME: _time repeats:YES block:^(NSTimer * _Nonnull timer) {
+    self.timer = [NSTimer xr_timerWithTimeInterval:_time < 1? DEFAULTTIME: _time repeats:YES block:^(NSTimer * _Nonnull timer) {
         [weakSelf nextPage];
     }];
     [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
