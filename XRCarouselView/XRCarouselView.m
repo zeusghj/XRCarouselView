@@ -214,7 +214,7 @@ static NSString *cache;
         _describeLabel.text = _describeArray[_currIndex];
     }
     //重新计算pageControl的位置
-    self.pagePosition = self.pagePosition;
+    self.pagePosition = _pagePosition;
 }
 
 #pragma mark 设置scrollView的contentSize
@@ -290,7 +290,20 @@ static NSString *cache;
         _pageControl.frame = CGRectMake(HORMARGIN, pointY, size.width, size.height);
     else
         _pageControl.frame = CGRectMake(self.width - HORMARGIN - size.width, pointY, size.width, size.height);
+    
+    if (!CGPointEqualToPoint(_pageOffset, CGPointZero)) {
+        self.pageOffset = _pageOffset;
+    }
 }
+
+- (void)setPageOffset:(CGPoint)pageOffset {
+    _pageOffset = pageOffset;
+    CGRect frame = _pageControl.frame;
+    frame.origin.x += pageOffset.x;
+    frame.origin.y += pageOffset.y;
+    _pageControl.frame = frame;
+}
+
 
 #pragma mark 设置定时器时间
 - (void)setTime:(NSTimeInterval)time {
@@ -344,7 +357,7 @@ static NSString *cache;
     _scrollView.frame = self.bounds;
     _describeLabel.frame = CGRectMake(0, self.height - DES_LABEL_H, self.width, DES_LABEL_H);
     //重新计算pageControl的位置
-    [self setPagePosition:_pagePosition];
+    self.pagePosition = _pagePosition;
     [self setScrollViewContentSize];
 }
 

@@ -51,6 +51,7 @@
     
     //设置分页控件的位置，默认为PositionBottomCenter
     _carouselView.pagePosition = PositionBottomRight;
+    
 
     [self.view addSubview:_carouselView];
     
@@ -62,6 +63,9 @@
     _carouselView1.imageArray = arr;
     //设置图片切换的方式
     _carouselView1.changeMode = ChangeModeFade;
+    
+    _carouselView1.pageOffset = CGPointMake(0, -5);
+    
 }
 
 

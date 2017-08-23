@@ -84,6 +84,13 @@ UIImage *gifImageNamed(NSString *imageName);
 
 
 /**
+ *  如果pagePosition无法满足需求，可通过该属性设置分页控件的偏移量
+ *  在pagePosition的基础上进行偏移
+ */
+@property (nonatomic, assign) CGPoint pageOffset;
+
+
+/**
  *  占位图片，在设置图片数组之前设置
  *  不设置则为默认占位图
  */
