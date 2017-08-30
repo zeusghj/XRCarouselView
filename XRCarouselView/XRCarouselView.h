@@ -11,20 +11,27 @@
 typedef void(^ClickBlock)(NSInteger index);
 
 //pageControl的显示位置
-typedef enum {
+typedef NS_ENUM(NSInteger, PageControlPosition) {
     PositionDefault,           //默认值 == PositionBottomCenter
     PositionHide,           //隐藏
     PositionTopCenter,      //中上
     PositionBottomLeft,     //左下
     PositionBottomCenter,   //中下
     PositionBottomRight     //右下
-} PageControlPosition;
+};
+
+//gif播放方式
+typedef NS_ENUM(NSInteger, GifPlayMode) {
+    GifPlayModeAlways,          //始终播放
+    GifPlayModeNever,           //从不播放
+    GifPlayModePauseWhenScroll  //切换图片时不播放
+};
 
 //图片切换的方式
-typedef enum {
+typedef NS_ENUM(NSInteger, ChangeMode) {
     ChangeModeDefault,  //轮播滚动
     ChangeModeFade      //淡入淡出
-} ChangeMode;
+};
 
 
 
@@ -127,9 +134,10 @@ UIImage *gifImageNamed(NSString *imageName);
 @property (nonatomic, assign) BOOL autoCache;
 
 /**
- *  滑动时 gif 自动播放, 默认为YES
+ *  gif的播放方式，默认为GifPlayModeAlways
+ *  淡入淡出模式下修改无效
  */
-@property (nonatomic, assign) BOOL autoPlayGIF;
+@property (nonatomic, assign) GifPlayMode gifPlayMode;
 
 /**
  *  点击图片后要执行的操作，会返回图片在数组中的索引

@@ -52,17 +52,17 @@
     //设置分页控件的位置，默认为PositionBottomCenter
     _carouselView.pagePosition = PositionBottomRight;
     
-    // 设置滑动时候gif停止播放
-    _carouselView.autoPlayGIF = NO;
+    // 设置滑动时gif停止播放
+    _carouselView.gifPlayMode = GifPlayModePauseWhenScroll;
 
     [self.view addSubview:_carouselView];
-    
     
     
     /**
      *  通过storyboard创建的轮播控件
      */
     _carouselView1.imageArray = arr;
+    
     //设置图片切换的方式
     _carouselView1.changeMode = ChangeModeFade;
     
@@ -71,10 +71,9 @@
 }
 
 
+
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    //清除缓存
     [XRCarouselView clearDiskCache];
-   
 }
 
 

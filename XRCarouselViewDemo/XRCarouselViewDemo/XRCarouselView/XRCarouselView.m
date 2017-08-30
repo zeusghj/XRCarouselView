@@ -94,7 +94,6 @@ static NSString *cache;
 #pragma mark 初始化控件
 - (void)initSubView {
     self.autoCache = YES;
-    self.autoPlayGIF = YES;
     [self addSubview:self.scrollView];
     [self addSubview:self.describeLabel];
     [self addSubview:self.pageControl];
@@ -312,6 +311,24 @@ static NSString *cache;
     [self startTimer];
 }
 
+- (void)setChangeMode:(ChangeMode)changeMode {
+    _changeMode = changeMode;
+    if (changeMode == ChangeModeFade) {
+        _gifPlayMode = GifPlayModeAlways;
+    }
+}
+
+#pragma mark 设置gif播放方式
+- (void)setGifPlayMode:(GifPlayMode)gifPlayMode {
+    if (_changeMode == ChangeModeFade) return;
+    _gifPlayMode = gifPlayMode;
+    if (gifPlayMode == GifPlayModeAlways) {
+        [self gifAnimating:YES];
+    } else if (gifPlayMode == GifPlayModeNever) {
+        [self gifAnimating:NO];
+    }
+}
+
 #pragma mark- --------定时器相关方法--------
 - (void)startTimer {
     //如果只有一张图片，则直接返回，不开启定时器
@@ -467,8 +484,8 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (CGSizeEqualToSize(CGSizeZero, scrollView.contentSize)) return;
     CGFloat offsetX = scrollView.contentOffset.x;
-    if (!_autoPlayGIF) {
-        if (offsetX == self.width * 2) [self resumeAnimating]; else [self pauseAnimating];
+    if (_gifPlayMode == GifPlayModePauseWhenScroll) {
+       [self gifAnimating:(offsetX == self.width * 2)];
     }
     
     //滚动过程中改变pageControl的当前页码
@@ -529,14 +546,11 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
     else [self changeToNext];
 }
 
-- (void)pauseAnimating {
-    [self gifAnimating:NO view:self.currImageView];
-    [self gifAnimating:NO view:self.otherImageView];
+- (void)gifAnimating:(BOOL)b {
+    [self gifAnimating:b view:self.currImageView];
+    [self gifAnimating:b view:self.otherImageView];
 }
-- (void)resumeAnimating {
-    [self gifAnimating:YES view:self.currImageView];
-    [self gifAnimating:YES view:self.otherImageView];
-}
+
 
 - (void)gifAnimating:(BOOL)isPlay view:(UIImageView *)imageV {
     if (isPlay) {
