@@ -126,6 +126,10 @@ UIImage *gifImageNamed(NSString *imageName);
  */
 @property (nonatomic, assign) BOOL autoCache;
 
+/**
+ *  滑动时 gif 自动播放, 默认为YES
+ */
+@property (nonatomic, assign) BOOL autoPlayGIF;
 
 /**
  *  点击图片后要执行的操作，会返回图片在数组中的索引

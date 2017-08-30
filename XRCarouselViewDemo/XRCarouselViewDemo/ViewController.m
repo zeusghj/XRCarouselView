@@ -52,6 +52,8 @@
     //设置分页控件的位置，默认为PositionBottomCenter
     _carouselView.pagePosition = PositionBottomRight;
     
+    // 设置滑动时候gif停止播放
+    _carouselView.autoPlayGIF = NO;
 
     [self.view addSubview:_carouselView];
     

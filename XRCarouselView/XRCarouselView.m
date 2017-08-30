@@ -94,6 +94,7 @@ static NSString *cache;
 #pragma mark 初始化控件
 - (void)initSubView {
     self.autoCache = YES;
+    self.autoPlayGIF = YES;
     [self addSubview:self.scrollView];
     [self addSubview:self.describeLabel];
     [self addSubview:self.pageControl];
@@ -466,6 +467,10 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if (CGSizeEqualToSize(CGSizeZero, scrollView.contentSize)) return;
     CGFloat offsetX = scrollView.contentOffset.x;
+    if (!_autoPlayGIF) {
+        if (offsetX == self.width * 2) [self resumeAnimating]; else [self pauseAnimating];
+    }
+    
     //滚动过程中改变pageControl的当前页码
     [self changeCurrentPageWithOffset:offsetX];
     //向右滚动
@@ -522,6 +527,30 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
     if (currPointInSelf.x >= -self.width / 2 && currPointInSelf.x <= self.width / 2)
         [self.scrollView setContentOffset:CGPointMake(self.width * 2, 0) animated:YES];
     else [self changeToNext];
+}
+
+- (void)pauseAnimating {
+    [self gifAnimating:NO view:self.currImageView];
+    [self gifAnimating:NO view:self.otherImageView];
+}
+- (void)resumeAnimating {
+    [self gifAnimating:YES view:self.currImageView];
+    [self gifAnimating:YES view:self.otherImageView];
+}
+
+- (void)gifAnimating:(BOOL)isPlay view:(UIImageView *)imageV {
+    if (isPlay) {
+        CFTimeInterval pausedTime = [imageV.layer timeOffset];
+        imageV.layer.speed = 1.0;
+        imageV.layer.timeOffset = 0.0;
+        imageV.layer.beginTime = 0.0;
+        CFTimeInterval timeSincePause = [imageV.layer convertTime:CACurrentMediaTime() fromLayer:nil] -    pausedTime;
+        imageV.layer.beginTime = timeSincePause;
+    } else {
+        CFTimeInterval pausedTime = [imageV.layer convertTime:CACurrentMediaTime() fromLayer:nil];
+        imageV.layer.speed = 0.0;
+        imageV.layer.timeOffset = pausedTime;
+    }
 }
 
 @end
