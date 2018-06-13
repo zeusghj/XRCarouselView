@@ -91,6 +91,12 @@ UIImage *gifImageNamed(NSString *imageName);
 
 
 /**
+ *  描述文字的TextAlignment，默认为NSTextAlignmentCenter
+ */
+@property (nonatomic, assign) NSTextAlignment describeTextAlignment;
+
+
+/**
  *  如果pagePosition无法满足需求，可通过该属性设置分页控件的偏移量
  *  在pagePosition的基础上进行偏移
  */
