@@ -76,6 +76,11 @@ static NSString *cache;
     }
 }
 
+- (void)setDescribeTextAlignment:(NSTextAlignment)describeTextAlignment {
+    if (describeTextAlignment) {
+        self.describeLabel.textAlignment = describeTextAlignment;
+    }
+}
 
 #pragma mark 代码创建
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -181,7 +186,7 @@ static NSString *cache;
         } else if ([imageArray[i] isKindOfClass:[NSString class]]){
             //如果是网络图片，则先添加占位图片，下载完成后替换
             if (_placeholderImage) [_images addObject:_placeholderImage];
-            else [_images addObject:[UIImage imageNamed:@"XRPlaceholder"]];
+            else [_images addObject:[UIImage imageNamed:@"XRPlaceholder" inBundle:[NSBundle bundleForClass:[self class]] compatibleWithTraitCollection:nil]];
             [self downloadImages:i];
         }
     }
@@ -211,7 +216,7 @@ static NSString *cache;
             _describeArray = describes;
         }
         self.describeLabel.hidden = NO;
-        _describeLabel.text = _describeArray[_currIndex];
+        self.describeLabel.text = _describeArray[_currIndex];
     }
     //重新计算pageControl的位置
     self.pagePosition = _pagePosition;
@@ -260,36 +265,36 @@ static NSString *cache;
 
 #pragma mark 设置pageControl的指示器颜色
 - (void)setPageColor:(UIColor *)color andCurrentPageColor:(UIColor *)currentColor {
-    _pageControl.pageIndicatorTintColor = color;
-    _pageControl.currentPageIndicatorTintColor = currentColor;
+    self.pageControl.pageIndicatorTintColor = color;
+    self.pageControl.currentPageIndicatorTintColor = currentColor;
 }
 
 #pragma mark 设置pageControl的位置
 - (void)setPagePosition:(PageControlPosition)pagePosition {
     _pagePosition = pagePosition;
-    _pageControl.hidden = (_pagePosition == PositionHide) || (_imageArray.count == 1);
-    if (_pageControl.hidden) return;
+    self.pageControl.hidden = (_pagePosition == PositionHide) || (_imageArray.count == 1);
+    if (self.pageControl.hidden) return;
     
     CGSize size;
     if (!_pageImageSize.width) {//没有设置图片，系统原有样式
-        size = [_pageControl sizeForNumberOfPages:_pageControl.numberOfPages];
+        size = [self.pageControl sizeForNumberOfPages:self.pageControl.numberOfPages];
         size.height = 8;
     } else {//设置图片了
-        size = CGSizeMake(_pageImageSize.width * (_pageControl.numberOfPages * 2 - 1), _pageImageSize.height);
+        size = CGSizeMake(_pageImageSize.width * (self.pageControl.numberOfPages * 2 - 1), _pageImageSize.height);
     }
-    _pageControl.frame = CGRectMake(0, 0, size.width, size.height);
+    self.pageControl.frame = CGRectMake(0, 0, size.width, size.height);
     
-    CGFloat centerY = self.height - size.height * 0.5 - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
-    CGFloat pointY = self.height - size.height - VERMARGIN - (_describeLabel.hidden?0: DES_LABEL_H);
+    CGFloat centerY = self.height - size.height * 0.5 - VERMARGIN - (self.describeLabel.hidden?0: DES_LABEL_H);
+    CGFloat pointY = self.height - size.height - VERMARGIN - (self.describeLabel.hidden?0: DES_LABEL_H);
     
     if (_pagePosition == PositionDefault || _pagePosition == PositionBottomCenter)
-        _pageControl.center = CGPointMake(self.width * 0.5, centerY);
+        self.pageControl.center = CGPointMake(self.width * 0.5, centerY);
     else if (_pagePosition == PositionTopCenter)
-        _pageControl.center = CGPointMake(self.width * 0.5, size.height * 0.5 + VERMARGIN);
+        self.pageControl.center = CGPointMake(self.width * 0.5, size.height * 0.5 + VERMARGIN);
     else if (_pagePosition == PositionBottomLeft)
-        _pageControl.frame = CGRectMake(HORMARGIN, pointY, size.width, size.height);
+        self.pageControl.frame = CGRectMake(HORMARGIN, pointY, size.width, size.height);
     else
-        _pageControl.frame = CGRectMake(self.width - HORMARGIN - size.width, pointY, size.width, size.height);
+        self.pageControl.frame = CGRectMake(self.width - HORMARGIN - size.width, pointY, size.width, size.height);
     
     if (!CGPointEqualToPoint(_pageOffset, CGPointZero)) {
         self.pageOffset = _pageOffset;
@@ -298,10 +303,10 @@ static NSString *cache;
 
 - (void)setPageOffset:(CGPoint)pageOffset {
     _pageOffset = pageOffset;
-    CGRect frame = _pageControl.frame;
+    CGRect frame = self.pageControl.frame;
     frame.origin.x += pageOffset.x;
     frame.origin.y += pageOffset.y;
-    _pageControl.frame = frame;
+    self.pageControl.frame = frame;
 }
 
 
@@ -370,10 +375,10 @@ static NSString *cache;
 - (void)layoutSubviews {
     [super layoutSubviews];
     //有导航控制器时，会默认在scrollview上方添加64的内边距，这里强制设置为0
-    _scrollView.contentInset = UIEdgeInsetsZero;
+    self.scrollView.contentInset = UIEdgeInsetsZero;
     
-    _scrollView.frame = self.bounds;
-    _describeLabel.frame = CGRectMake(0, self.height - DES_LABEL_H, self.width, DES_LABEL_H);
+    self.scrollView.frame = self.bounds;
+    self.describeLabel.frame = CGRectMake(0, self.height - DES_LABEL_H, self.width, DES_LABEL_H);
     //重新计算pageControl的位置
     self.pagePosition = _pagePosition;
     [self setScrollViewContentSize];
@@ -472,11 +477,11 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
     if (offsetX < self.width * 1.5) {
         NSInteger index = self.currIndex - 1;
         if (index < 0) index = self.images.count - 1;
-        _pageControl.currentPage = index;
+        self.pageControl.currentPage = index;
     } else if (offsetX > self.width * 2.5){
-        _pageControl.currentPage = (self.currIndex + 1) % self.images.count;
+        self.pageControl.currentPage = (self.currIndex + 1) % self.images.count;
     } else {
-        _pageControl.currentPage = self.currIndex;
+        self.pageControl.currentPage = self.currIndex;
     }
 }
 
@@ -540,7 +545,7 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
 //该方法用来修复滚动过快导致分页异常的bug
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (_changeMode == ChangeModeFade) return;
-    CGPoint currPointInSelf = [_scrollView convertPoint:_currImageView.frame.origin toView:self];
+    CGPoint currPointInSelf = [self.scrollView convertPoint:_currImageView.frame.origin toView:self];
     if (currPointInSelf.x >= -self.width / 2 && currPointInSelf.x <= self.width / 2)
         [self.scrollView setContentOffset:CGPointMake(self.width * 2, 0) animated:YES];
     else [self changeToNext];
