@@ -49,6 +49,9 @@ typedef NS_ENUM(NSInteger, ChangeMode) {
  */
 - (void)carouselView:(XRCarouselView *)carouselView clickImageAtIndex:(NSInteger)index;
 
+// 添加两个代理方法
+- (void)carouselView:(XRCarouselView *)carouselView scrollViewWillBeginDragging:(BOOL)dragging;
+- (void)carouselView:(XRCarouselView *)carouselView scrollViewDidEndDragging:(BOOL)dragging;
 @end
 
 
@@ -88,6 +91,12 @@ UIImage *gifImageNamed(NSString *imageName);
  *  只有一张图片时，pageControl隐藏
  */
 @property (nonatomic, assign) PageControlPosition pagePosition;
+
+
+/**
+ *  描述文字的TextAlignment，默认为NSTextAlignmentCenter
+ */
+@property (nonatomic, assign) NSTextAlignment describeTextAlignment;
 
 
 /**
