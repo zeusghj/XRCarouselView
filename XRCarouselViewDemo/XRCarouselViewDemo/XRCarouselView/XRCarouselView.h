@@ -50,7 +50,8 @@ typedef NS_ENUM(NSInteger, ChangeMode) {
 - (void)carouselView:(XRCarouselView *)carouselView clickImageAtIndex:(NSInteger)index;
 
 // 添加两个代理方法
-
+- (void)carouselView:(XRCarouselView *)carouselView scrollViewWillBeginDragging:(BOOL)dragging;
+- (void)carouselView:(XRCarouselView *)carouselView scrollViewDidEndDragging:(BOOL)dragging;
 @end
 
 

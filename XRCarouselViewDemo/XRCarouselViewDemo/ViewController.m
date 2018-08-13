@@ -82,6 +82,12 @@
     NSLog(@"点击了第%ld张图片", index);
 }
 
+- (void)carouselView:(XRCarouselView *)carouselView scrollViewWillBeginDragging:(BOOL)dragging {
+    NSLog(@"开始拽");
+}
 
+- (void)carouselView:(XRCarouselView *)carouselView scrollViewDidEndDragging:(BOOL)dragging {
+    NSLog(@"停止拽");
+}
 
 @end

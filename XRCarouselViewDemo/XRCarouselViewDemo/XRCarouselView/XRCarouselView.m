@@ -536,10 +536,18 @@ float durationWithSourceAtIndex(CGImageSourceRef source, NSUInteger index) {
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     [self stopTimer];
+    
+    if ([_delegate respondsToSelector:@selector(carouselView:scrollViewWillBeginDragging:)]){
+        [_delegate carouselView:self scrollViewWillBeginDragging:YES];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     [self startTimer];
+    
+    if ([_delegate respondsToSelector:@selector(carouselView:scrollViewDidEndDragging:)]){
+        [_delegate carouselView:self scrollViewDidEndDragging:YES];
+    }
 }
 
 //该方法用来修复滚动过快导致分页异常的bug
