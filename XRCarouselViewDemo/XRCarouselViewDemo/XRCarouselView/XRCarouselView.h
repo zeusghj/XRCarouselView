@@ -49,6 +49,8 @@ typedef NS_ENUM(NSInteger, ChangeMode) {
  */
 - (void)carouselView:(XRCarouselView *)carouselView clickImageAtIndex:(NSInteger)index;
 
+// 添加两个代理方法
+
 @end
 
 
