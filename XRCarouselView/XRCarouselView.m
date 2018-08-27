@@ -269,6 +269,11 @@ static NSString *cache;
     self.pageControl.currentPageIndicatorTintColor = currentColor;
 }
 
+#pragma mark 返回当前页面索引
+- (NSInteger) getCurrentPageIndex {
+    return self.currIndex;
+}
+
 #pragma mark 设置pageControl的位置
 - (void)setPagePosition:(PageControlPosition)pagePosition {
     _pagePosition = pagePosition;

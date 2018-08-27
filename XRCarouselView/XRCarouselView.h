@@ -196,6 +196,12 @@ UIImage *gifImageNamed(NSString *imageName);
  */
 - (void)setPageColor:(UIColor *)color andCurrentPageColor:(UIColor *)currentColor;
 
+/**
+ 获取当前页面索引
+ 
+ @return 返回当前页面索引
+ */
+- (NSInteger) getCurrentPageIndex;
 
 /**
  *  修改图片描述控件的部分属性，不需要修改的传nil
